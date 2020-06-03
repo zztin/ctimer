@@ -21,14 +21,19 @@ tool to help you keep track of your productivity during the day, and help you se
 Contributions are welcome!
 
 
-* Free software: MIT license
-
 
 
 Features
 --------
 
-* TODO
+* Provide a Tkinter GUI window for ease of use for users. 
+* Set 25 mins for focus time, and 5 mins for break time.
+* Set 8 clocks as aim for a day.
+
+* TODO:
+        - Allowing setting customize time inteval, aim clock counts, goals for today (text).
+        - Visual representation of clocks accomplished today. 
+        - Allows notes taking (note interruption, how many pauses you took etc.)
 
 Credits
 -------
@@ -37,3 +42,8 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+
+These links provided immense help for a head start for this project.
+1. stackoverflow: https://stackoverflow.com/questions/47824017/starting-and-pausing-with-a-countdown-timer-in-tkinter
+2. stackexchange: https://apple.stackexchange.com/questions/3454/say-in-different-language
+3. tkinter tutorial
