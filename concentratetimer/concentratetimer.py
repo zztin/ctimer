@@ -6,11 +6,6 @@ import tkinter as tk
 # their copyright, it is not our intention.
 # TODO: check pomodoro trademark guidelines
 # https://francescocirillo.com/pages/pomodoro-trademark-guidelines
-# reference links
-# 1. stackoverflow: https://stackoverflow.com/questions/47824017/starting-and-pausing-with-a-countdown-timer-in-tkinter
-# 2. stackexchange: https://apple.stackexchange.com/questions/3454/say-in-different-language
-# 3. tkinter tutorial
-
 
 def time_print(time):
     mins, secs = divmod(time, 60)
