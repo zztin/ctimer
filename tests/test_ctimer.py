@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-"""Tests for `pomodoro` package."""
+"""Tests for `ctimer` package."""
 
 import pytest
 
 
-from concentratetimer import pomodorodata
+from concentratetimer import ctimerdata
 
 
 @pytest.fixture

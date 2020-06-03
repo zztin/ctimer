@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install pomodoro, run this command in your terminal:
+To install ctimer, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install pomodoro
+    $ pip install ctimer
 
-This is the preferred method to install pomodoro, as it will always install the most recent stable release.
+This is the preferred method to install ctimer, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,19 +26,19 @@ you through the process.
 From sources
 ------------
 
-The sources for pomodoro can be downloaded from the `Github repo`_.
+The sources for ctimer can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/zztin/pomodoro
+    $ git clone git://github.com/zztin/ctimer
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl -OJL https://github.com/zztin/pomodoro/tarball/master
+    $ curl -OJL https://github.com/zztin/ctimer/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/zztin/pomodoro
-.. _tarball: https://github.com/zztin/pomodoro/tarball/master
+.. _Github repo: https://github.com/zztin/ctimer
+.. _tarball: https://github.com/zztin/ctimer/tarball/master

@@ -31,7 +31,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="This is a python implementation of pomodoro concentration timer. Contributions are welcome",
+    description="This is a python implementation of a time management tool (a concentration timer). Contributions are welcome",
     entry_points={
         'console_scripts': [
             'ctimer=concentratetimer.cli:main',
@@ -41,7 +41,7 @@ setup(
     license="MIT license",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
-    keywords=['pomodoro','timer','concentration','concentrate'],
+    keywords=['timer','concentration','concentrate'],
     name='concentratetimer',
     packages=find_packages(include=['concentratetimer', 'concentratetimer.*']),
     setup_requires=setup_requirements,

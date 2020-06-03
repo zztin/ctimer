@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=pomodoro
+set SPHINXPROJ=ctimer
 
 if "%1" == "" goto help
 

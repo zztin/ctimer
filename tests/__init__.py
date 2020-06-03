@@ -1,1 +1,1 @@
-"""Unit test package for pomodoro."""
+"""Unit test package for ctimer."""

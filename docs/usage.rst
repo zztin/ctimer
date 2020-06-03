@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use pomodoro in a project::
+To use ctimer in a project::
 
-    import pomodoro
+    import ctimer

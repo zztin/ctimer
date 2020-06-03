@@ -1,4 +1,4 @@
-Welcome to pomodoro's documentation!
+Welcome to ctimer's documentation!
 ======================================
 
 .. toctree::

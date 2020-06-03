@@ -103,3 +103,16 @@ ENV/
 
 # IDE settings
 .vscode/
+
+# Mac stuff
+.DS_Store
+
+# Pycharm stuff
+.editorconfig
+.idea/
+
+# Data
+data/
+
+# travis
+.travis.yml
