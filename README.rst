@@ -30,7 +30,10 @@ Features
 * Set 25 mins for focus time, and 5 mins for break time.
 * Set 8 clocks as aim for a day.
 
-* TODO:
+* TODO BUGFIX:
+        - self.display.config updates appears after the voice_messages (os.subprocess("say ...")
+        - 00:00 does not show.
+* TODO NEW FEATURES:
         - Allowing setting customize time inteval, aim clock counts, goals for today (prompt text) on entry.
         - Visual representation of clocks accomplished today (1. block representation of time similar to gantt chart.\
           Compare across the week. 2. Histogram over time over the year-- this requires storage of data locally).

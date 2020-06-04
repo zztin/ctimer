@@ -19,8 +19,8 @@ class ConcentrateTimer(tk.Frame):
         self.master = master
         master.title("Pomodoro Timer")
         self.test_volume()
-        self.data = Meta(set_time=2, break_time=1.5, long_break_time=3, long_break_clock_count=1)
-        #self.data = Meta()
+        #self.data = Meta(set_time=2, break_time=2, long_break_time=5, long_break_clock_count=2)
+        self.data = Meta()
         self.clock_ticking = False
         self.is_break = False
         self.set_time = self.data.set_time
@@ -65,9 +65,8 @@ class ConcentrateTimer(tk.Frame):
                 self.display.config(text=time_print(self.remaining_time))
             else:
                 self.remaining_time = 0
-                # TODO: this Done! appears after the voice...
-                # TODO: Sometimes 00:00 does not show.
-
+                # TODO: self.display.config updates appears after the voice_messages (os.subprocess("say ..."))
+                # TODO: 00:00 does not show.
                 if self.is_break == False:
                     self.display.config(text="Done!")
                     self.data.total_clock_count += 1
@@ -83,7 +82,7 @@ class ConcentrateTimer(tk.Frame):
                     self.voice_message("break_over")
                     self.is_break = False
                     self.remaining_time = self.set_time
-                    self.display.config(text=time_print(self.remaining_time)) ##Todo change to set_time is clearer.
+                    self.display.config(text=time_print(self.set_time))
                     self.start_pause_button['text'] = "Start"
                     self.start_pause_button['fg'] = "Green"
                     self.display['fg'] = "Black"
