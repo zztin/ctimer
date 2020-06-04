@@ -26,15 +26,14 @@ Contributions are welcome!
 Features
 --------
 
-* Provide a Tkinter GUI window for the ease of use for users. 
+* Provide a Tkinter GUI window for the ease of use for users.
 * Set 25 mins for focus time, and 5 mins for break time.
 * Set 8 clocks as aim for a day.
 
 * TODO:
-        - Implement longer break (every 4 clocks)
         - Allowing setting customize time inteval, aim clock counts, goals for today (prompt text) on entry.
         - Visual representation of clocks accomplished today (1. block representation of time similar to gantt chart.\
-          Compare across the week. 2. Histogram over time over the year-- this requires storage of data locally). 
+          Compare across the week. 2. Histogram over time over the year-- this requires storage of data locally).
         - Allows notes taking during the clock (note interruption, how many pauses you took etc.)
         - Add tick-tock sound when clocks start.
 
