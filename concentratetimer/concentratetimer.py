@@ -19,14 +19,16 @@ class ConcentrateTimer(tk.Frame):
         self.master = master
         master.title("Pomodoro Timer")
         self.test_volume()
-#        self.pomodoro = PomodoroData(set_time=8, break_time=3)
-        self.data = Meta()
+        self.data = Meta(set_time=2, break_time=1.5, long_break_time=3, long_break_clock_count=1)
+        #self.data = Meta()
         self.clock_ticking = False
         self.is_break = False
         self.set_time = self.data.set_time
         self.set_time_print = time_print(self.set_time)
         self.set_break_time = self.data.break_time
+        self.set_long_break_time = self.data.long_break_time
         self.remaining_time = self.set_time
+        self.long_break_clock_count = self.data.long_break_clock_count
         self.pack()
         self.create_widgets()
 
@@ -70,15 +72,18 @@ class ConcentrateTimer(tk.Frame):
                     self.display.config(text="Done!")
                     self.data.total_clock_count += 1
                     self.total_clock_counts.config(text=f"Total clocks: {self.data.total_clock_count}")
+                    if self.data.total_clock_count % self.long_break_clock_count == 0:
+                        self.remaining_time = self.set_long_break_time
+                    else:
+                        self.remaining_time = self.set_break_time
                     self.voice_message("done")
-                    self.remaining_time = self.set_break_time
                     self.is_break = True
                     self.display['fg'] = "Green"
                 else:
                     self.voice_message("break_over")
                     self.is_break = False
                     self.remaining_time = self.set_time
-                    self.display.config(text=time_print(self.remaining_time))
+                    self.display.config(text=time_print(self.remaining_time)) ##Todo change to set_time is clearer.
                     self.start_pause_button['text'] = "Start"
                     self.start_pause_button['fg'] = "Green"
                     self.display['fg'] = "Black"
@@ -91,9 +96,12 @@ class ConcentrateTimer(tk.Frame):
             if self.data.total_clock_count == 1:
                 message = f"Beebeebeebee beebee. Done. You have achieved 1 clock today. " \
                           f"Enjoy your break!"
+            elif self.data.total_clock_count % self.data.long_break_clock_count == 0:
+                message = f"Beebeebeebee. Hooray. You achieved {self.data.total_clock_count} clocks already. " \
+                          f"Enjoy your long break."
             else:
                 message = f"Beebeebeebee beebee. Done. You have achieved {self.data.total_clock_count} " \
-                          f"clocks today. Enjoy your break!"
+                          f"clocks today. Enjoy your break."
         elif message_type == "start":
             message = "ready? go"
         elif message_type == "pause":
@@ -115,14 +123,13 @@ class ConcentrateTimer(tk.Frame):
             self.start_pause_button['fg'] = "Red"
             self.clock_ticking = True
             self.countdown()
-
         # pause clock
         else:
             self.voice_message("pause")
             self.start_pause_button['text'] = "Start"
             self.start_pause_button['fg'] = "Green"
             self.clock_ticking = False
-
+    # premature terminate clock
     def terminate(self):
         self.start_pause_button['text'] = "Start"
         self.start_pause_button['fg'] = "Green"
@@ -151,14 +158,35 @@ class Meta():
                  total_clock_count=0,
                  aim_clock_count=8,
                  set_time=25*60,
-                 break_time=5*60):
+                 break_time=5*60,
+                 long_break_time=15*60,
+                 long_break_clock_count=4):
+        '''
+
+        :param start_time_first_clock: start time of the first clock of the day.
+        :param start_time_this_clock: start time of the current clock
+        :param remaining_time: remaining time of the current clock
+        :param total_clock_count: achieved clock count while initializing the app
+        :param aim_clock_count: aim for a day (8 clocks)
+        :param set_time: the interval of a pomodoro clock (25 mins)
+        :param break_time: the interval of a normal break (5 mins)
+        :param long_break_time: the interval of a long break (15 mins)
+        :param long_break_clock_count: when achieved n clocks, a long break is given (4 clocks, at least 2.)
+        '''
         self.start_time_first_clock = start_time_first_clock
         self.start_time_this_clock = start_time_this_clock
-        self.remaining_time = remaining_time
-        self.total_clock_count = total_clock_count # should not be access via outside unless special cases
-        self.aim_clock_count = aim_clock_count
-        self.set_time = set_time
-        self.break_time= break_time
+        self.total_clock_count = int(round(total_clock_count)) # should not be access via outside unless special cases
+        self.aim_clock_count = int(round(aim_clock_count))
+        self.set_time = int(round(set_time))
+        self.remaining_time = remaining_time # Deprecated (used below)
+        self.break_time= int(round(break_time))
+        self.long_break_time = int(round(long_break_time))
+        if long_break_clock_count < 2:
+            self.long_break_clock_count = 2
+        else:
+            self.long_break_clock_count = int(round(long_break_clock_count))
+
+
 
     # Deprecated
     def pomodoro_loop(self):
