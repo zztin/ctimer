@@ -50,7 +50,7 @@ class ConcentrateTimer(tk.Frame):
                                      command=self.terminate)
         self.total_clock_aim = tk.Label(self, height=1, width=10, textvariable="")
         self.total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
-        self.total_clock_counts = tk.Label(self, height=1, width=10, textvariable="")
+        self.total_clock_counts = tk.Label(self, height=1, width=15, textvariable="")
         self.total_clock_counts.config(text=f"Done: {self.data.total_clock_count}")
         self.total_clock_aim.grid(row=0, column=0, columnspan=2)
         self.total_clock_counts.grid(row=1, column=0, columnspan=2)
