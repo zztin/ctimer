@@ -1,8 +1,8 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: "[Component name if available, e.g. Review System] Good bug title tells us
-  about precise symptom, not about the root cause."
+about: Create a bug report to help us improve
+title: "[Component name if available, e.g. Review System] A good bug report title tells us
+  about the precise symptoms for the bug, but not about the root causes."
 labels: triage needed
 assignees: ''
 ---
@@ -10,7 +10,7 @@ assignees: ''
 
 ## Description
 **Describe the bug**
-A clear and concise description of what the bug is.
+Please provide a clear and concise description of what the bug is about.
 
 * ctimer version:
 * Python version:
