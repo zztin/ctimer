@@ -12,8 +12,6 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [ ]
 
-setup_requirements = ['pytest-runner', ]
-
 test_requirements = ['pytest>=3', ]
 
 setup(
@@ -45,7 +43,6 @@ setup(
     keywords=['timer', 'concentration', 'concentrate'],
     name='concentratetimer',
     packages=find_packages(include=['concentratetimer', 'concentratetimer.*']),
-    setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/zztin/ctimer',
