@@ -1,6 +1,5 @@
 """Console script for concentratetimer."""
-import argparse
-import concentratetimer
+from concentratetimer import concentratetimer
 import tkinter as tk
 import sys
 
