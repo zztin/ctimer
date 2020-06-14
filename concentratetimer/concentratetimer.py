@@ -1,5 +1,6 @@
 import shlex, subprocess
 import time
+from datetime import date
 import tkinter as tk
 # TODO: check software licences
 # This code is an implementation upon the pomodoro technique from Cirillo, Francesco. If there is any ablation toward
@@ -48,15 +49,18 @@ class ConcentrateTimer(tk.Frame):
                                      width=8,
                                      height=4,
                                      command=self.terminate)
+        self.date = tk.Label(self, height=1, width=10, textvariable="")
+        self.date.config(text=date.today())
         self.total_clock_aim = tk.Label(self, height=1, width=10, textvariable="")
         self.total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
         self.total_clock_counts = tk.Label(self, height=1, width=15, textvariable="")
         self.total_clock_counts.config(text=f"Done: {self.data.total_clock_count}")
-        self.total_clock_aim.grid(row=0, column=0, columnspan=2)
-        self.total_clock_counts.grid(row=1, column=0, columnspan=2)
-        self.display.grid(row=2, column=0, columnspan=2)
-        self.start_pause_button.grid(row=3, column=0)
-        self.stop_button.grid(row=3, column=1)
+        self.date.grid(row=0, column=1, columnspan=2)
+        self.total_clock_aim.grid(row=1, column=0, columnspan=2)
+        self.total_clock_counts.grid(row=2, column=0, columnspan=2)
+        self.display.grid(row=3, column=0, columnspan=2)
+        self.start_pause_button.grid(row=4, column=0)
+        self.stop_button.grid(row=4, column=1)
 
     def countdown(self):
         if self.clock_ticking:
