@@ -40,6 +40,21 @@ Features
         - Allows notes taking during the clock (note interruption, how many pauses you took etc.)
         - Add tick-tock sound when clocks start.
 
+
+Installation
+------------
+
+```
+python setup.py develop
+```
+
+Launch the Application
+----------------------
+
+```
+ctimer
+```
+
 Credits
 -------
 
