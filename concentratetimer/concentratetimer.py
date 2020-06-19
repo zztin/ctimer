@@ -2,6 +2,7 @@ import shlex, subprocess
 import time
 from datetime import date
 import tkinter as tk
+from tkinter import simpledialog
 # TODO: check software licences
 # This code is an implementation upon the pomodoro technique from Cirillo, Francesco. If there is any ablation toward
 # their copyright, it is not our intention.
@@ -32,6 +33,7 @@ class ConcentrateTimer(tk.Frame):
         self.long_break_clock_count = self.data.long_break_clock_count
         self.pack()
         self.create_widgets()
+        self.goal = None
 
     def create_widgets(self):
         self.display = tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable="")
@@ -55,12 +57,35 @@ class ConcentrateTimer(tk.Frame):
         self.total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
         self.total_clock_counts = tk.Label(self, height=1, width=15, textvariable="")
         self.total_clock_counts.config(text=f"Done: {self.data.total_clock_count}")
+
+        # self.prompt_label = tk.Label(self,
+        #                              text="Goal for this clock:",
+        #                              height=1,
+        #                              width=15,
+        #                              textvariable="")
+        # self.prompt_entry = tk.Entry(self)
+        self.goal_show_label = tk.Label(self, text="", height=2)
+
         self.date.grid(row=0, column=0, columnspan=2)
         self.total_clock_aim.grid(row=1, column=0, columnspan=2)
         self.total_clock_counts.grid(row=2, column=0, columnspan=2)
         self.display.grid(row=3, column=0, columnspan=2)
-        self.start_pause_button.grid(row=4, column=0)
-        self.stop_button.grid(row=4, column=1)
+        self.start_pause_button.grid(row=5, column=0)
+        self.stop_button.grid(row=5, column=1)
+        # self.prompt_label.grid(row=4, column=0, columnspan=1)
+        # self.prompt_entry.grid(row=4, column=1, columnspan=1)
+        self.goal_show_label.grid(row=6, column=0, columnspan=2)
+
+        # self.prompt_entry.bind("<Return>", (lambda event: self.get_goal()))
+        self.grid()
+
+    def get_goal(self):
+        # TODO: get all goals for all clocks for the day
+        self.goal = simpledialog.askstring(title="Set your goals",
+                                      prompt="What's your goal for this clock:")
+        self.goal_show_label["text"] = f"Goal: {self.goal}"
+        # goal = self.prompt_entry.get()
+        # self.prompt_entry.delete(0,"end")
 
     def countdown(self):
         if self.clock_ticking:
@@ -106,7 +131,7 @@ class ConcentrateTimer(tk.Frame):
                 message = f"Beebeebeebee beebee. Done. You have achieved {self.data.total_clock_count} " \
                           f"clocks today. Enjoy your break."
         elif message_type == "start":
-            message = "ready? go"
+            message = "ready? set your goal."
         elif message_type == "pause":
             message = "Pause"
         elif message_type == "stop":
@@ -120,6 +145,8 @@ class ConcentrateTimer(tk.Frame):
         # start clock
         if self.clock_ticking == False:
             self.voice_message("start")
+            if self.remaining_time == self.set_time:
+                self.get_goal()
             self.data.start_time_first_clock = time.time()
             self.data.start_time_this_clock = time.time()
             self.start_pause_button['text'] = "Pause"
