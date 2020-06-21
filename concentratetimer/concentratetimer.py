@@ -57,13 +57,6 @@ class ConcentrateTimer(tk.Frame):
         self.total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
         self.total_clock_counts = tk.Label(self, height=1, width=15, textvariable="")
         self.total_clock_counts.config(text=f"Done: {self.data.total_clock_count}")
-
-        # self.prompt_label = tk.Label(self,
-        #                              text="Goal for this clock:",
-        #                              height=1,
-        #                              width=15,
-        #                              textvariable="")
-        # self.prompt_entry = tk.Entry(self)
         self.goal_show_label = tk.Label(self, text="", height=2)
 
         self.date.grid(row=0, column=0, columnspan=2)
@@ -72,12 +65,8 @@ class ConcentrateTimer(tk.Frame):
         self.display.grid(row=3, column=0, columnspan=2)
         self.start_pause_button.grid(row=5, column=0)
         self.stop_button.grid(row=5, column=1)
-        # self.prompt_label.grid(row=4, column=0, columnspan=1)
-        # self.prompt_entry.grid(row=4, column=1, columnspan=1)
         self.goal_show_label.grid(row=6, column=0, columnspan=2)
-
-        # self.prompt_entry.bind("<Return>", (lambda event: self.get_goal()))
-        self.grid()
+        #self.grid()
 
     def get_goal(self):
         # TODO: get all goals for all clocks for the day
