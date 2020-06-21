@@ -2,17 +2,19 @@ import sqlite3
 from sqlite3 import Error
 from collections import namedtuple
 from dataclasses import dataclass
+from dataclasses import astuple
 
 
 @dataclass(init=True, repr=True)
 class Clock_details:
-    date: str = "",
-    clock_count: int = 0,
-    start_clock: float = 12345.6,
-    end_clock: float = 12345.6,
-    end_break: float = 12345.6,
-    goal: str = "GOAL TO BE SET",
-    reached_bool: bool = False,
+    date: str = ""
+    clock_count: int = 0
+    start_clock: float = 12345.6
+    end_clock: float = 12345.6
+    end_break: float = 12345.7
+    task_title: str = "Task title TO BE IMPLEMENT"
+    task_description: str = "Task description to be set"
+    reached_bool: bool = False
     reason: str = "REASON TO BE FILLED IN"
 
 
@@ -21,9 +23,7 @@ def db_add_clock_details(clock_instance):
     # create a database connection
     conn = create_connection(db_file)
     with conn:
-        # TODO: fix AttributeError: 'Clock_details' object has no attribute 'astuple'
-        # https://docs.python.org/3/library/dataclasses.html
-        clock_id = create_clock_details(conn, clock_instance.astuple())
+        clock_id = create_clock_details(conn, astuple(clock_instance))
     conn.close()
     return clock_id
 
