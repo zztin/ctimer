@@ -66,15 +66,12 @@ class ConcentrateTimer(tk.Frame):
         self.start_pause_button.grid(row=5, column=0)
         self.stop_button.grid(row=5, column=1)
         self.goal_show_label.grid(row=6, column=0, columnspan=2)
-        #self.grid()
 
     def get_goal(self):
         # TODO: get all goals for all clocks for the day
         self.goal = simpledialog.askstring(title="Set your goals",
                                       prompt="What's your goal for this clock:")
         self.goal_show_label["text"] = f"Goal: {self.goal}"
-        # goal = self.prompt_entry.get()
-        # self.prompt_entry.delete(0,"end")
 
     def countdown(self):
         if self.clock_ticking:
