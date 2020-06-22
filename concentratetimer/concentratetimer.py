@@ -70,8 +70,13 @@ class ConcentrateTimer(tk.Frame):
     def get_goal(self):
         # TODO: get all goals for all clocks for the day
         self.goal = simpledialog.askstring(title="Set your goals",
-                                      prompt="What's your goal for this clock:")
+                                           prompt="What's your goal for this clock:")
+        while not self.goal:
+            self.goal = simpledialog.askstring(title="Set Your Goals",
+                                               prompt="Empty Goal Is Not Allow. What's Your Goal for This Clock:")
+
         self.goal_show_label["text"] = f"Goal: {self.goal}"
+
 
     def countdown(self):
         if self.clock_ticking:
@@ -131,6 +136,7 @@ class ConcentrateTimer(tk.Frame):
         # start clock
         if self.clock_ticking == False:
             self.voice_message("start")
+            # only asking when the clock starts at the very beginning
             if self.remaining_time == self.set_time:
                 self.get_goal()
             self.data.start_time_first_clock = time.time()
