@@ -60,13 +60,6 @@ class ConcentrateTimer(tk.Frame):
         self.total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
         self.total_clock_counts = tk.Label(self, height=1, width=15, textvariable="")
         self.total_clock_counts.config(text=f"Done: {self.data.total_clock_count}")
-
-        # self.prompt_label = tk.Label(self,
-        #                              text="Goal for this clock:",
-        #                              height=1,
-        #                              width=15,
-        #                              textvariable="")
-        # self.prompt_entry = tk.Entry(self)
         self.goal_show_label = tk.Label(self, text="", height=2)
 
         self.date.grid(row=0, column=0, columnspan=2)
@@ -75,12 +68,7 @@ class ConcentrateTimer(tk.Frame):
         self.display.grid(row=3, column=0, columnspan=2)
         self.start_pause_button.grid(row=5, column=0)
         self.stop_button.grid(row=5, column=1)
-        # self.prompt_label.grid(row=4, column=0, columnspan=1)
-        # self.prompt_entry.grid(row=4, column=1, columnspan=1)
         self.goal_show_label.grid(row=6, column=0, columnspan=2)
-
-        # self.prompt_entry.bind("<Return>", (lambda event: self.get_goal()))
-        self.grid()
 
     def get_goal(self):
         # TODO: get all goals for all clocks for the day
@@ -125,6 +113,7 @@ class ConcentrateTimer(tk.Frame):
     def goal_not_reached(self):
         # TODO: pass the button in here, change color upon clicking. same as line 109
         self.clock_details.reached_bool = False
+
 
     def countdown(self):
         if self.clock_ticking:
@@ -196,6 +185,7 @@ class ConcentrateTimer(tk.Frame):
         if self.clock_ticking == False:
             self.voice_message("start")
             ### starting a new clock
+
             if self.remaining_time == self.set_time:
                 self.clock_details = db.Clock_details()
                 self.clock_details.date = f"{date.today()}"
