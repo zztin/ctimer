@@ -25,7 +25,7 @@ class ConcentrateTimer(tk.Frame):
         self.master = master
         master.title("Pomodoro Timer")
         self.test_volume()
-        self.data = Meta(set_time=1, break_time=2, long_break_time=5, long_break_clock_count=2)
+        self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
 #        self.data = Meta()
         self.clock_ticking = False
         self.is_break = False
@@ -79,42 +79,16 @@ class ConcentrateTimer(tk.Frame):
         self.goal_show_label["text"] = f"Goal: {self.clock_details.task_description}"
 
     def ask_reached_goal_reason(self):
-        global reached
-        reached = tk.Toplevel()
-        reached.grab_set()
-        reached.wm_title("Assess your clock")
-        l = tk.Label(reached, text="Did you reach your goal, why?", height = 2)
-        l.grid(row=0, column=0, columnspan=2)
-        yes = tk.Button(reached, text="Yes", command=self.goal_reached)
-        yes.grid(row=1, column=0, columnspan=1)
-        no = tk.Button(reached, text="Not yet", command=self.goal_not_reached)
-        no.grid(row=1, column=1, columnspan=1)
-        prompt_label = tk.Label(reached,
-                                     text="Reasons:",
-                                     height=1,
-                                     width=5)
-        global r
-        r = StringVar()
-        r.set("e.g. planned too little time")
-        # TODO: show reason prompt entry after clicking (yes, no). change color / disable clicking upon click.
-        prompt_entry = tk.Entry(reached, textvariable=r)
-        prompt_entry.bind("<Return>", self.get_reason)
-        prompt_label.grid(row=2, column=0, columnspan=1)
-        prompt_entry.grid(row=2, column=1, columnspan=1)
-
-    def get_reason(self, event):
-        reason = r.get()
-        reached.destroy()
-        self.clock_details.reason = reason
-
-    def goal_reached(self):
-        # TODO: pass the button in here, change color upon clicking. same as line 109
-        self.clock_details.reached_bool = True
-
-    def goal_not_reached(self):
-        # TODO: pass the button in here, change color upon clicking. same as line 109
-        self.clock_details.reached_bool = False
-
+        self.clock_details.reached_bool = mbox.askyesno("Goal reached?",
+                                                        "Did you finish your goal?",
+                                                        parent=self)
+        if self.clock_details.reached_bool is False:
+            self.clock_details.reason = simpledialog.askstring("Goal reached description",
+                                                               "What happened? "
+                                                               "What was a suprise? \n"
+                                                               "What needs to modify to "
+                                                               "have a realistic goal? ",
+                                                               parent=self)
 
     def countdown(self):
         if self.clock_ticking:
@@ -129,10 +103,6 @@ class ConcentrateTimer(tk.Frame):
                     self.data.total_clock_count += 1
                     self.clock_details.clock_count = self.data.total_clock_count
                     self.clock_details.end_clock = time.time()
-                    # TODO: Now ask_reached_goal_reason evoke a separate thread, main program keep on running (until
-                    #  break times up). This create problem when the writing to data base is not yet filled in
-                    #  with reason data.
-                    # TODO: create message box with built in GUI: https://stackoverflow.com/questions/10057672/correct-way-to-implement-a-custom-popup-tkinter-dialog-box
                     self.ask_reached_goal_reason()
                     self.total_clock_counts.config(text=f"Total clocks: {self.data.total_clock_count}")
                     if self.data.total_clock_count % self.long_break_clock_count == 0:

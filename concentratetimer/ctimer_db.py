@@ -15,7 +15,7 @@ class Clock_details:
     task_title: str = "Task title TO BE IMPLEMENT"
     task_description: str = "Task description to be set"
     reached_bool: bool = False
-    reason: str = "REASON TO BE FILLED IN"
+    reason: str = "N.A."
 
 
 def db_add_clock_details(db_file, clock_instance):
