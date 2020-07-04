@@ -61,6 +61,7 @@ def create_connection(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
+        create_table(db_file)
     except Error as e:
         print(e)
 
@@ -81,3 +82,4 @@ def create_clock_details(conn, entry):
     cur = conn.cursor()
     cur.execute(sql, entry)
     return cur.lastrowid
+

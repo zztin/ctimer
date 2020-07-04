@@ -8,7 +8,7 @@ import sys
 
 def main():
     db_file = '../data/ctimer.db'
-    db.create_table(db_file) # create if not exist
+    db.create_connection(db_file) # create if not exist
     root = tk.Tk()
     app = concentratetimer.ConcentrateTimer(master=root)
     app.mainloop()
