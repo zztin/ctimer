@@ -18,8 +18,7 @@ class Clock_details:
     reason: str = "REASON TO BE FILLED IN"
 
 
-def db_add_clock_details(clock_instance):
-    db_file = "../data/ctimer.db"
+def db_add_clock_details(db_file, clock_instance):
     # create a database connection
     conn = create_connection(db_file)
     with conn:
@@ -82,4 +81,21 @@ def create_clock_details(conn, entry):
     cur = conn.cursor()
     cur.execute(sql, entry)
     return cur.lastrowid
+
+
+def create_connection_new(db_file):
+    """ create a database connection to a SQLite database """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print(sqlite3.version)
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
+if __name__ == '__main__':
+    create_connection("./data/ctimer.db")
 

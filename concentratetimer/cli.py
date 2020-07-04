@@ -7,10 +7,10 @@ import sys
 
 
 def main():
-    db_file = '../data/ctimer.db'
+    db_file = './data/ctimer.db'
     db.create_connection(db_file) # create if not exist
     root = tk.Tk()
-    app = concentratetimer.ConcentrateTimer(master=root)
+    app = concentratetimer.ConcentrateTimer(master=root, db_file=db_file)
     app.mainloop()
 
 

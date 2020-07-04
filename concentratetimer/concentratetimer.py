@@ -18,8 +18,9 @@ def time_print(time):
 
 
 class ConcentrateTimer(tk.Frame):
-    def __init__(self, master=None):
+    def __init__(self, master=None, db_file=None):
         super().__init__(master)
+        self.db_file = db_file
         self.master = master
         master.title("Pomodoro Timer")
         self.test_volume()
@@ -99,7 +100,6 @@ class ConcentrateTimer(tk.Frame):
         prompt_entry.bind("<Return>", self.get_reason)
         prompt_label.grid(row=2, column=0, columnspan=1)
         prompt_entry.grid(row=2, column=1, columnspan=1)
-        print("in def ask_reached_goal_reason", self.clock_details)
 
     def get_reason(self, event):
         reason = r.get()
@@ -145,9 +145,8 @@ class ConcentrateTimer(tk.Frame):
                     # break is over. Record break over time.
                     self.voice_message("break_over")
                     self.clock_details.end_break = time.time()
-                    # BUG: This is reached before reason is filled. check line 142 todo
-                    print("line 155 in concentrationtimer.py before writing:", self.clock_details)
-                    db.db_add_clock_details(self.clock_details)
+                    # TODO: Bug fix --This is reached before reason is filled. check line 142
+                    db.db_add_clock_details(self.db_file, self.clock_details)
                     self.is_break = False
                     self.remaining_time = self.set_time
                     self.display.config(text=time_print(self.set_time))
