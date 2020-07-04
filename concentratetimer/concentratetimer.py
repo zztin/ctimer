@@ -218,10 +218,6 @@ class ConcentrateTimer(tk.Frame):
         print(message)
         command = shlex.split(f"say {message}")
         subprocess.run(command)
-        print("Did you hear something? \n"
-              "If not, check your volume and sound system. \n"
-              "This is essential for getting notice from pomodoro when time's up. \n"
-              "Also, find PomodroTimer GUI window somewhere and interact there. :)")
 
 
 
