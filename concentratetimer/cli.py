@@ -2,12 +2,13 @@
 from concentratetimer import concentratetimer
 import tkinter as tk
 import concentratetimer.ctimer_db as db
-
 import sys
-
+from subprocess import Popen, PIPE
+import os
 
 def main():
-    db_file = './data/ctimer.db'
+    path = os.path.dirname(concentratetimer.__file__).rsplit("/",1)[0]
+    db_file = f"{path}/data/ctimer.db"
     db.create_connection(db_file) # create if not exist
     root = tk.Tk()
     app = concentratetimer.ConcentrateTimer(master=root, db_file=db_file)

@@ -96,6 +96,3 @@ def create_connection_new(db_file):
             conn.close()
 
 
-if __name__ == '__main__':
-    create_connection("./data/ctimer.db")
-
