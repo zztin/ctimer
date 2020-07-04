@@ -3,6 +3,7 @@ import time
 from datetime import date
 import tkinter as tk
 from tkinter import simpledialog
+from tkinter import messagebox as mbox
 import concentratetimer.ctimer_db as db
 from tkinter import StringVar
 # TODO: check software licences
@@ -145,7 +146,7 @@ class ConcentrateTimer(tk.Frame):
                     # break is over. Record break over time.
                     self.voice_message("break_over")
                     self.clock_details.end_break = time.time()
-                    # TODO: Bug fix --This is reached before reason is filled. check line 142
+                    # TODO: Bug fix --This is reached before reason is filled. check line 134
                     db.db_add_clock_details(self.db_file, self.clock_details)
                     self.is_break = False
                     self.remaining_time = self.set_time
