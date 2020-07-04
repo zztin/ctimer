@@ -41,7 +41,9 @@ Features
         - Allows notes taking during the clock (note interruption, how many pauses you took etc.)
         - Add tick-tock sound when clocks start.
 
-# Note: For checking the sqlite database in command line:
+# Note: For checking the sqlite database
+A. drag and drop: https://inloop.github.io/sqlite-viewer/
+B. in command line
 1. >>> sqlite3 ./data/ctimer.db
 2. >>> select * from clock_details; <---remember the ";" in the end
 The entries should show! If not, try
