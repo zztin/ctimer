@@ -5,12 +5,8 @@ import tkinter as tk
 from tkinter import simpledialog
 from tkinter import messagebox as mbox
 import concentratetimer.ctimer_db as db
-from tkinter import StringVar
-# TODO: check software licences
 # This code is an implementation upon the pomodoro technique from Cirillo, Francesco. If there is any ablation toward
 # their copyright, it is not our intention.
-# TODO: check pomodoro trademark guidelines
-# https://francescocirillo.com/pages/pomodoro-trademark-guidelines
 
 def time_print(time):
     mins, secs = divmod(time, 60)
