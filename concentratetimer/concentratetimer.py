@@ -22,8 +22,8 @@ class ConcentrateTimer(tk.Frame):
         master.title("Pomodoro Timer")
         self.test_volume()
         # For testing:
-        # self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
-        self.data = Meta()
+        self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
+        #self.data = Meta()
         self.clock_ticking = False
         self.is_break = False
         self.set_time = self.data.set_time
@@ -100,7 +100,6 @@ class ConcentrateTimer(tk.Frame):
                     self.data.total_clock_count += 1
                     self.clock_details.clock_count = self.data.total_clock_count
                     self.clock_details.end_clock = time.time()
-                    self.ask_reached_goal_reason()
                     self.total_clock_counts.config(text=f"Total clocks: {self.data.total_clock_count}")
                     if self.data.total_clock_count % self.long_break_clock_count == 0:
                         self.remaining_time = self.set_long_break_time
@@ -109,6 +108,7 @@ class ConcentrateTimer(tk.Frame):
                     self.voice_message("done")
                     self.is_break = True
                     self.display['fg'] = "Green"
+                    self.ask_reached_goal_reason()
                 else:
                     # break is over. Record break over time.
                     self.voice_message("break_over")
