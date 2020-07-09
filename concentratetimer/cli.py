@@ -11,9 +11,10 @@ def main():
     #  it has to find it automatically. "from tkinter import filedialog"
     path = os.path.dirname(concentratetimer.__file__).rsplit("/",1)[0]
     if os.path.exists(f"{path}/data"):
-        db_file = f"{path}/data/ctimer.db"
+        pass
     else:
         os.makedirs(f"{path}/data/")
+    db_file = f"{path}/data/ctimer.db"
     db.create_connection(db_file) # create if not exist
     root = tk.Tk()
     app = concentratetimer.ConcentrateTimer(master=root, db_file=db_file)
