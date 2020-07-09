@@ -15,15 +15,16 @@ def time_print(time):
 
 
 class ConcentrateTimer(tk.Frame):
-    def __init__(self, master=None, db_file=None):
+    def __init__(self, master=None, db_file=None, debug=False):
         super().__init__(master)
         self.db_file = db_file
         self.master = master
         master.title("Pomodoro Timer")
         self.test_volume()
-        # For testing:
-        #self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
-        self.data = Meta()
+        if debug:
+            self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
+        else:
+            self.data = Meta()
         self.clock_ticking = False
         self.is_break = False
         self.set_time = self.data.set_time

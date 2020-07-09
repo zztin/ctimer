@@ -5,8 +5,12 @@ import concentratetimer.ctimer_db as db
 import sys
 from subprocess import Popen, PIPE
 import os
-
+import argparse
+import argparse
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--debug", help="Shorten clock intervals for debugging purposes.",action="store_true")
+    args = parser.parse_args()
     # can also prompt user to enter a file path to store the database, but next time when the program launch
     #  it has to find it automatically. "from tkinter import filedialog"
     path = os.path.dirname(concentratetimer.__file__).rsplit("/",1)[0]
@@ -17,7 +21,7 @@ def main():
     db_file = f"{path}/data/ctimer.db"
     db.create_connection(db_file) # create if not exist
     root = tk.Tk()
-    app = concentratetimer.ConcentrateTimer(master=root, db_file=db_file)
+    app = concentratetimer.ConcentrateTimer(master=root, db_file=db_file, debug=args.debug)
     app.mainloop()
     return 0
 
