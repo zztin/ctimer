@@ -29,6 +29,7 @@ Features
 * Provide a Tkinter GUI window for the ease of use for users.
 * Set 25 mins for focus time, and 5 mins for break time.
 * Set 8 clocks as aim for a day.
+* Goals / feedback of each clock & time span per day is kept in a local SQL database (named ctimer.db). Use command line tool sqlite3 you could check the entries.
 
 * TODO BUGFIX:
         - self.display.config updates appears after the voice_messages (os.subprocess("say ...")
@@ -40,6 +41,14 @@ Features
         - Allows notes taking during the clock (note interruption, how many pauses you took etc.)
         - Add tick-tock sound when clocks start.
 
+# Note: For checking the sqlite database
+A. drag and drop: https://inloop.github.io/sqlite-viewer/
+B. in command line
+1. >>> sqlite3 ./data/ctimer.db
+2. >>> select * from clock_details; <---remember the ";" in the end
+The entries should show! If not, try
+3. .tables
+This should show clock_details
 
 Installation
 ------------

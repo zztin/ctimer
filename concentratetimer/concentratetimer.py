@@ -3,11 +3,10 @@ import time
 from datetime import date
 import tkinter as tk
 from tkinter import simpledialog
-# TODO: check software licences
+from tkinter import messagebox as mbox
+import concentratetimer.ctimer_db as db
 # This code is an implementation upon the pomodoro technique from Cirillo, Francesco. If there is any ablation toward
 # their copyright, it is not our intention.
-# TODO: check pomodoro trademark guidelines
-# https://francescocirillo.com/pages/pomodoro-trademark-guidelines
 
 def time_print(time):
     mins, secs = divmod(time, 60)
@@ -16,12 +15,14 @@ def time_print(time):
 
 
 class ConcentrateTimer(tk.Frame):
-    def __init__(self, master=None):
+    def __init__(self, master=None, db_file=None):
         super().__init__(master)
+        self.db_file = db_file
         self.master = master
         master.title("Pomodoro Timer")
         self.test_volume()
-        #self.data = Meta(set_time=2, break_time=2, long_break_time=5, long_break_clock_count=2)
+        # For testing:
+        #self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
         self.data = Meta()
         self.clock_ticking = False
         self.is_break = False
@@ -34,6 +35,7 @@ class ConcentrateTimer(tk.Frame):
         self.pack()
         self.create_widgets()
         self.goal = None
+        self.clock_details = None
 
     def create_widgets(self):
         self.display = tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable="")
@@ -69,14 +71,21 @@ class ConcentrateTimer(tk.Frame):
 
     def get_goal(self):
         # TODO: get all goals for all clocks for the day
-        self.goal = simpledialog.askstring(title="Set your goals",
-                                           prompt="What's your goal for this clock:")
-        while not self.goal:
-            self.goal = simpledialog.askstring(title="Set Your Goals",
-                                               prompt="Empty Goal Is Not Allow. What's Your Goal for This Clock:")
+        self.clock_details.task_description = simpledialog.askstring(title="Set your goals",
+                                                                     prompt="What's your goal for this clock:")
+        self.goal_show_label["text"] = f"Goal: {self.clock_details.task_description}"
 
-        self.goal_show_label["text"] = f"Goal: {self.goal}"
-
+    def ask_reached_goal_reason(self):
+        self.clock_details.reached_bool = mbox.askyesno("Goal reached?",
+                                                        "Did you finish your goal?",
+                                                        parent=self)
+        if self.clock_details.reached_bool is False:
+            self.clock_details.reason = simpledialog.askstring("Goal reached description",
+                                                               "What happened? "
+                                                               "What was a suprise? \n"
+                                                               "What needs to modify to "
+                                                               "have a realistic goal? ",
+                                                               parent=self)
 
     def countdown(self):
         if self.clock_ticking:
@@ -85,11 +94,12 @@ class ConcentrateTimer(tk.Frame):
                 self.display.config(text=time_print(self.remaining_time))
             else:
                 self.remaining_time = 0
-                # TODO: self.display.config updates appears after the voice_messages (os.subprocess("say ..."))
-                # TODO: 00:00 does not show.
+                # Finish a clock
                 if self.is_break == False:
                     self.display.config(text="Done!")
                     self.data.total_clock_count += 1
+                    self.clock_details.clock_count = self.data.total_clock_count
+                    self.clock_details.end_clock = time.time()
                     self.total_clock_counts.config(text=f"Total clocks: {self.data.total_clock_count}")
                     if self.data.total_clock_count % self.long_break_clock_count == 0:
                         self.remaining_time = self.set_long_break_time
@@ -98,8 +108,13 @@ class ConcentrateTimer(tk.Frame):
                     self.voice_message("done")
                     self.is_break = True
                     self.display['fg'] = "Green"
+                    self.ask_reached_goal_reason()
                 else:
+                    # break is over. Record break over time.
                     self.voice_message("break_over")
+                    self.clock_details.end_break = time.time()
+                    # TODO: Bug fix --This is reached before reason is filled. check line 134
+                    db.db_add_clock_details(self.db_file, self.clock_details)
                     self.is_break = False
                     self.remaining_time = self.set_time
                     self.display.config(text=time_print(self.set_time))
@@ -122,7 +137,8 @@ class ConcentrateTimer(tk.Frame):
                 message = f"Beebeebeebee beebee. Done. You have achieved {self.data.total_clock_count} " \
                           f"clocks today. Enjoy your break."
         elif message_type == "start":
-            message = "ready? set your goal."
+            # TODO: if starting a new clock, new message: ready? set your goal
+            message = "ready? Start."
         elif message_type == "pause":
             message = "Pause"
         elif message_type == "stop":
@@ -133,14 +149,16 @@ class ConcentrateTimer(tk.Frame):
         subprocess.run(command)
 
     def start_pause(self):
-        # start clock
         if self.clock_ticking == False:
             self.voice_message("start")
-            # only asking when the clock starts at the very beginning
+            ### starting a new clock
+
             if self.remaining_time == self.set_time:
+                self.clock_details = db.Clock_details()
+                self.clock_details.date = f"{date.today()}"
+                self.clock_details.start_clock = time.time()
                 self.get_goal()
-            self.data.start_time_first_clock = time.time()
-            self.data.start_time_this_clock = time.time()
+            self.clock_details.start_clock = time.time()
             self.start_pause_button['text'] = "Pause"
             self.start_pause_button['fg'] = "Red"
             self.clock_ticking = True
@@ -167,10 +185,8 @@ class ConcentrateTimer(tk.Frame):
         print(message)
         command = shlex.split(f"say {message}")
         subprocess.run(command)
-        print("Did you hear something? \n"
-              "If not, check your volume and sound system. \n"
-              "This is essential for getting notice from pomodoro when time's up. \n"
-              "Also, find PomodroTimer GUI window somewhere and interact there. :)")
+
+
 
 
 class Meta():
