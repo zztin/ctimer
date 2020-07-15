@@ -34,9 +34,10 @@ class ConcentrateTimer(tk.Frame):
         self.remaining_time = self.set_time
         self.long_break_clock_count = self.data.long_break_clock_count
         self.pack()
+        self.clock_details = db.Clock_details()
+        self.clock_details.date = f"{date.today()}"
         self.create_widgets()
         self.goal = None
-        self.clock_details = None
 
     def create_widgets(self):
         self.display = tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable="")
@@ -55,7 +56,7 @@ class ConcentrateTimer(tk.Frame):
                                      height=4,
                                      command=self.terminate)
         self.date = tk.Label(self, height=1, width=10, textvariable="")
-        self.date.config(text=f"{date.today()}")
+        self.date.config(text=self.clock_details.date)
         self.total_clock_aim = tk.Label(self, height=1, width=10, textvariable="")
         self.total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
         self.total_clock_counts = tk.Label(self, height=1, width=15, textvariable="")
@@ -155,8 +156,8 @@ class ConcentrateTimer(tk.Frame):
             ### starting a new clock
 
             if self.remaining_time == self.set_time:
-                self.clock_details = db.Clock_details()
                 self.clock_details.date = f"{date.today()}"
+                self.date.config(text=self.clock_details.date)
                 self.clock_details.start_clock = time.time()
                 self.get_goal()
             self.clock_details.start_clock = time.time()
