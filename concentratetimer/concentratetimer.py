@@ -19,7 +19,7 @@ class ConcentrateTimer(tk.Frame):
         super().__init__(master)
         self.db_file = db_file
         self.master = master
-        master.title("Pomodoro Timer")
+        master.title("Concentration Timer")
         self.test_volume(debug=debug)
         if debug:
             self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
