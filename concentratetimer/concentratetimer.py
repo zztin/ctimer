@@ -20,7 +20,7 @@ class ConcentrateTimer(tk.Frame):
         self.db_file = db_file
         self.master = master
         master.title("Pomodoro Timer")
-        self.test_volume()
+        self.test_volume(debug=debug)
         if debug:
             self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
         else:
@@ -181,8 +181,11 @@ class ConcentrateTimer(tk.Frame):
         self.display.config(text=self.set_time_print)
         self.voice_message("stop")
 
-    def test_volume(self):
-        message = "Welcome"
+    def test_volume(self, debug=False):
+        if debug:
+            message = "Welcome to debug mode."
+        else:
+            message = "Welcome"
         print(message)
         command = shlex.split(f"say {message}")
         subprocess.run(command)
