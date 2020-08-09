@@ -133,10 +133,10 @@ class ConcentrateTimer(tk.Frame):
                           f"Enjoy your break!"
             elif self.data.total_clock_count % self.data.long_break_clock_count == 0:
                 message = f"Beebeebeebee. Hooray. You achieved {self.data.total_clock_count} clocks already. " \
-                          f"Enjoy your long break."
+                          f"Please update if your goal has been reached and enjoy your long break."
             else:
                 message = f"Beebeebeebee beebee. Done. You have achieved {self.data.total_clock_count} " \
-                          f"clocks today. Enjoy your break."
+                          f"clocks today. Did you reach your goal?"
         elif message_type == "start":
             # TODO: if starting a new clock, new message: ready? set your goal
             message = "ready? Start."
@@ -145,7 +145,7 @@ class ConcentrateTimer(tk.Frame):
         elif message_type == "stop":
             message = "Stop and recharge"
         elif message_type == "break_over":
-            message = "Times up"
+            message = "Times up. Click start to start a new clock!"
         command = shlex.split(f"say {message}")
         subprocess.run(command)
 
