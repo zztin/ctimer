@@ -1,6 +1,7 @@
 # https://plotly.com/python/gantt/
 
 # Gantt
+# https://sukhbinder.wordpress.com/2016/05/10/quick-gantt-chart-with-matplotlib/
 # import plotly.figure_factory as ff
 #
 # df = [dict(Task="Job A", Start='2009-01-01', Finish='2009-02-28'),
@@ -17,5 +18,5 @@
 # Bokeh patches
 # https://docs.bokeh.org/en/latest/docs/user_guide/plotting.html
 # Clock count
-#https://community.plotly.com/t/colored-calendar-heatmap-in-dash/10907/9
-#https://docs.bokeh.org/en/latest/docs/gallery/range_tool.html
+# https://community.plotly.com/t/colored-calendar-heatmap-in-dash/10907/9
+# https://docs.bokeh.org/en/latest/docs/gallery/range_tool.html
