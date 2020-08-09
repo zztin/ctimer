@@ -17,6 +17,19 @@ class Clock_details:
     reached_bool: bool = False
     reason: str = "N.A."
 
+def get_clock_count(db_file):
+    # create a database connection
+    conn = create_connection(db_file)
+    c = conn.cursor()
+    # Create table
+    try:
+        last_row = c.execute('''SELECT * FROM clock_details ORDER BY id DESC LIMIT 1;''').fetchall()[-1]
+        clock_count = last_row[2]
+    except Exception as e:
+        print(e)
+        clock_count = 0
+    return clock_count
+
 
 def db_add_clock_details(db_file, clock_instance):
     # create a database connection
