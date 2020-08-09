@@ -1,5 +1,4 @@
 # ctimer
-========
 
 
 .. image:: https://img.shields.io/pypi/v/ctimer.svg
@@ -22,8 +21,7 @@ Contributions are welcome!
 
 
 
-Features
---------
+## Features
 
 * Provide a Tkinter GUI window for the ease of use for users.
 * Set 25 mins for focus time, and 5 mins for break time.
@@ -49,22 +47,19 @@ The entries should show! If not, try
 3. .tables
 This should show clock_details
 
-Installation
-------------
+## Installation
 
 ```
 python setup.py develop
 ```
 
-Launch the Application
-----------------------
+## Launch the Application
 
 ```
 ctimer
 ```
 
-Credits
--------
+## Credits
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
