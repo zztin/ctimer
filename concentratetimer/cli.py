@@ -7,6 +7,8 @@ from subprocess import Popen, PIPE
 import os
 import argparse
 import argparse
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", help="Shorten clock intervals for debugging purposes.",action="store_true")
@@ -22,6 +24,7 @@ def main():
     db.create_connection(db_file) # create if not exist
     root = tk.Tk()
     app = concentratetimer.ConcentrateTimer(master=root, db_file=db_file, debug=args.debug)
+    #app.protocol("WM_DELETE_WINDOW", safe_closing)
     app.mainloop()
     return 0
 
