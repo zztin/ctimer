@@ -9,9 +9,9 @@ from dataclasses import astuple
 class Clock_details:
     date: str = ""
     clock_count: int = 0
-    start_clock: float = 12345.6
-    end_clock: float = 12345.6
-    end_break: float = 12345.7
+    start_clock: float = 0
+    end_clock: float = 0
+    end_break: float = 0
     task_title: str = "Task title TO BE IMPLEMENT"
     task_description: str = "Task description to be set"
     reached_bool: bool = False
