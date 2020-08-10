@@ -1,10 +1,11 @@
 import sqlite3
 from sqlite3 import Error
 from datetime import date
+from datetime import datetime
 from collections import namedtuple
 from dataclasses import dataclass
 from dataclasses import astuple
-
+import pandas as pd
 
 @dataclass(init=True, repr=True)
 class Clock_details:
@@ -17,6 +18,20 @@ class Clock_details:
     task_description: str = "Task description to be set"
     reached_bool: bool = False
     reason: str = "N.A."
+
+
+def get_yearly_stats(db_file):
+    conn = create_connection(db_file)
+    df = pd.read_sql_query("SELECT * FROM clock_details", conn)
+
+    # new feature while including all clocks (also halted clocks)
+    # df[df['clock_done'] == True]['clock_start']
+    start_series_raw = df['start_clock']
+    start_series = [datetime.fromtimestamp(int(float(x))) for x in start_series_raw]
+    events = pd.DataFrame(index=start_series, columns=["count"])
+    events['count'] = 1
+    events = events['count']
+    return events
 
 def get_clock_count(db_file):
     # create a database connection
