@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import Error
+from datetime import date
 from collections import namedtuple
 from dataclasses import dataclass
 from dataclasses import astuple
@@ -9,13 +10,30 @@ from dataclasses import astuple
 class Clock_details:
     date: str = ""
     clock_count: int = 0
-    start_clock: float = 12345.6
-    end_clock: float = 12345.6
-    end_break: float = 12345.7
+    start_clock: float = 0
+    end_clock: float = 0
+    end_break: float = 0
     task_title: str = "Task title TO BE IMPLEMENT"
     task_description: str = "Task description to be set"
     reached_bool: bool = False
     reason: str = "N.A."
+
+def get_clock_count(db_file):
+    # create a database connection
+    conn = create_connection(db_file)
+    c = conn.cursor()
+    # Create table
+    try:
+        last_row = c.execute('''SELECT * FROM clock_details ORDER BY id DESC LIMIT 1;''').fetchall()[-1]
+        if last_row[1] == f"{date.today()}":
+            clock_count = last_row[2]
+        else:
+            clock_count = 0
+    except Exception as e:
+        # if the db is empty: error --list index out of range
+        print("Error in def get_clock_count:", e, "clock_count set to 0.")
+        clock_count = 0
+    return clock_count
 
 
 def db_add_clock_details(db_file, clock_instance):
@@ -49,6 +67,7 @@ def create_table(db_file):
         conn.close()
     except Error as e:
         print(e)
+
 
 
 def create_connection(db_file):

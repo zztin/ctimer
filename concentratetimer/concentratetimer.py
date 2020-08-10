@@ -38,6 +38,9 @@ class ConcentrateTimer(tk.Frame):
         self.clock_details.date = f"{date.today()}"
         self.create_widgets()
         self.goal = None
+        self.clock_details = db.Clock_details()
+        self.clock_details.clock_count = db.get_clock_count(self.db_file)
+        self.total_clock_counts.config(text=f"Done: {self.clock_details.clock_count}")
 
     def create_widgets(self):
         self.display = tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable="")
@@ -60,7 +63,7 @@ class ConcentrateTimer(tk.Frame):
         self.total_clock_aim = tk.Label(self, height=1, width=10, textvariable="")
         self.total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
         self.total_clock_counts = tk.Label(self, height=1, width=15, textvariable="")
-        self.total_clock_counts.config(text=f"Done: {self.data.total_clock_count}")
+        self.total_clock_counts.config(text=f"Done: ...Loading...")
         self.goal_show_label = tk.Label(self, text="", height=2)
 
         self.date.grid(row=0, column=0, columnspan=2)
@@ -79,7 +82,7 @@ class ConcentrateTimer(tk.Frame):
 
     def ask_reached_goal_reason(self):
         self.clock_details.reached_bool = mbox.askyesno("Goal reached?",
-                                                        "Did you finish your goal?",
+                                                        "Did you reach your goal?",
                                                         parent=self)
         if self.clock_details.reached_bool is False:
             self.clock_details.reason = simpledialog.askstring("Goal reached description",
@@ -88,6 +91,8 @@ class ConcentrateTimer(tk.Frame):
                                                                "What needs to modify to "
                                                                "have a realistic goal? ",
                                                                parent=self)
+        self.voice_message("enjoy")
+
 
     def countdown(self):
         if self.clock_ticking:
@@ -99,11 +104,10 @@ class ConcentrateTimer(tk.Frame):
                 # Finish a clock
                 if self.is_break == False:
                     self.display.config(text="Done!")
-                    self.data.total_clock_count += 1
-                    self.clock_details.clock_count = self.data.total_clock_count
+                    self.clock_details.clock_count += 1
                     self.clock_details.end_clock = time.time()
-                    self.total_clock_counts.config(text=f"Total clocks: {self.data.total_clock_count}")
-                    if self.data.total_clock_count % self.long_break_clock_count == 0:
+                    self.total_clock_counts.config(text=f"Total clocks: {self.clock_details.clock_count}")
+                    if self.clock_details.clock_count % self.long_break_clock_count == 0:
                         self.remaining_time = self.set_long_break_time
                     else:
                         self.remaining_time = self.set_break_time
@@ -129,15 +133,15 @@ class ConcentrateTimer(tk.Frame):
 
     def voice_message(self, message_type):
         if message_type == "done":
-            if self.data.total_clock_count == 1:
+            if self.clock_details.clock_count == 1:
                 message = f"Beebeebeebee beebee. Done. You have achieved 1 clock today. " \
-                          f"Enjoy your break!"
-            elif self.data.total_clock_count % self.data.long_break_clock_count == 0:
-                message = f"Beebeebeebee. Hooray. You achieved {self.data.total_clock_count} clocks already. " \
-                          f"Enjoy your long break."
+                          f"Did you reach your goal?"
+            elif self.clock_details.clock_count % self.data.long_break_clock_count == 0:
+                message = f"Beebeebeebee. Hooray. You achieved {self.clock_details.clock_count} clocks already. " \
+                          f"Did you finish your goal?."
             else:
-                message = f"Beebeebeebee beebee. Done. You have achieved {self.data.total_clock_count} " \
-                          f"clocks today. Enjoy your break."
+                message = f"Beebeebeebee beebee. Done. You have achieved {self.clock_details.clock_count} " \
+                          f"clocks today. Did you reach your goal?"
         elif message_type == "start":
             # TODO: if starting a new clock, new message: ready? set your goal
             message = "ready? Start."
@@ -146,7 +150,9 @@ class ConcentrateTimer(tk.Frame):
         elif message_type == "stop":
             message = "Stop and recharge"
         elif message_type == "break_over":
-            message = "Times up"
+            message = "Times up. Click start to start a new clock!"
+        elif message_type == "enjoy":
+            message = "Thanks! Enjoy your break!"
         command = shlex.split(f"say {message}")
         subprocess.run(command)
 
@@ -175,6 +181,7 @@ class ConcentrateTimer(tk.Frame):
     def terminate(self):
         self.start_pause_button['text'] = "Start"
         self.start_pause_button['fg'] = "Green"
+        self.is_break = False
         self.display['fg'] = "Black"
         self.clock_ticking = False
         self.remaining_time = self.set_time
@@ -198,7 +205,7 @@ class Meta():
     def __init__(self, start_time_first_clock=None,
                  start_time_this_clock=None,
                  remaining_time=None,
-                 total_clock_count=0,
+                 # total_clock_count=0,
                  aim_clock_count=8,
                  set_time=25*60,
                  break_time=5*60,
@@ -218,7 +225,7 @@ class Meta():
         '''
         self.start_time_first_clock = start_time_first_clock
         self.start_time_this_clock = start_time_this_clock
-        self.total_clock_count = int(round(total_clock_count)) # should not be access via outside unless special cases
+        # self.total_clock_count = int(round(total_clock_count)) # should not be access via outside unless special cases
         self.aim_clock_count = int(round(aim_clock_count))
         self.set_time = int(round(set_time))
         self.remaining_time = remaining_time # Deprecated (used below)
@@ -235,7 +242,7 @@ class Meta():
     def pomodoro_loop(self):
         while True:
             self.countdown(self)
-            self.total_clock_count += 1
+            # self.total_clock_count += 1
             print("Done! Next clock starting")
 
     # Deprecated
