@@ -82,7 +82,7 @@ class ConcentrateTimer(tk.Frame):
 
     def ask_reached_goal_reason(self):
         self.clock_details.reached_bool = mbox.askyesno("Goal reached?",
-                                                        "Did you finish your goal?",
+                                                        "Did you reach your goal?",
                                                         parent=self)
         if self.clock_details.reached_bool is False:
             self.clock_details.reason = simpledialog.askstring("Goal reached description",
@@ -91,6 +91,8 @@ class ConcentrateTimer(tk.Frame):
                                                                "What needs to modify to "
                                                                "have a realistic goal? ",
                                                                parent=self)
+        self.voice_message("enjoy")
+
 
     def countdown(self):
         if self.clock_ticking:
@@ -133,10 +135,10 @@ class ConcentrateTimer(tk.Frame):
         if message_type == "done":
             if self.clock_details.clock_count == 1:
                 message = f"Beebeebeebee beebee. Done. You have achieved 1 clock today. " \
-                          f"Enjoy your break!"
+                          f"Did you reach your goal?"
             elif self.clock_details.clock_count % self.data.long_break_clock_count == 0:
                 message = f"Beebeebeebee. Hooray. You achieved {self.clock_details.clock_count} clocks already. " \
-                          f"Please update if your goal has been reached and enjoy your long break."
+                          f"Did you finish your goal?."
             else:
                 message = f"Beebeebeebee beebee. Done. You have achieved {self.clock_details.clock_count} " \
                           f"clocks today. Did you reach your goal?"
@@ -149,6 +151,8 @@ class ConcentrateTimer(tk.Frame):
             message = "Stop and recharge"
         elif message_type == "break_over":
             message = "Times up. Click start to start a new clock!"
+        elif message_type == "enjoy":
+            message = "Thanks! Enjoy your break!"
         command = shlex.split(f"say {message}")
         subprocess.run(command)
 
@@ -177,6 +181,7 @@ class ConcentrateTimer(tk.Frame):
     def terminate(self):
         self.start_pause_button['text'] = "Start"
         self.start_pause_button['fg'] = "Green"
+        self.is_break = False
         self.display['fg'] = "Black"
         self.clock_ticking = False
         self.remaining_time = self.set_time
