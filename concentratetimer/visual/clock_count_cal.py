@@ -18,8 +18,10 @@ def random_events():
 
 
 def plot_calmap(events=random_events()):
+    # cmap choices: viridis
     calmap.calendarplot(events, monthticks=True, daylabels='MTWTFSS',
-                        cmap='YlGn', fillcolor='grey', linewidth=1, vmin=0,
-                        fig_kws=dict(figsize=(12, 6)))
+                        cmap='PuBuGn', fillcolor='whitesmoke', linewidth=1, vmin=0,
+                        fig_kws=dict(figsize=(12, 6)), fig_suptitle="CTimer clock count")
+
     plt.show()
 
