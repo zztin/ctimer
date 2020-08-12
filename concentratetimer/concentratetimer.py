@@ -22,7 +22,7 @@ class ConcentrateTimer(tk.Frame):
         master.title("Concentration Timer")
         self.test_volume(debug=debug)
         if debug:
-            self.data = Meta(set_time=10, break_time=3, long_break_time=5, long_break_clock_count=2)
+            self.data = Meta(set_time=3, break_time=3, long_break_time=5, long_break_clock_count=2)
         else:
             self.data = Meta()
         self.clock_ticking = False
