@@ -36,7 +36,8 @@ These repositories and links provided ideas for implementations for this project
 4. https://github.com/rougier/calendar-heatmap
 5. https://github.com/MarvinT/calmap
 
-#### Note: For checking the ctimer.db file (sqlite database) 
+## Notes: 
+### Easy way to check your sqlite database (the ctimer.db file) 
 A. drag and drop: https://inloop.github.io/sqlite-viewer/
 B. in command line
 1. `sqlite3 ./data/ctimer.db`
