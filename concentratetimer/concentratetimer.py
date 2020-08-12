@@ -42,6 +42,10 @@ class ConcentrateTimer(tk.Frame):
         self.clock_details.clock_count = db.get_clock_count(self.db_file)
         self.total_clock_counts.config(text=f"Done: {self.clock_details.clock_count}")
 
+    def raise_above_all(self):
+        self.attributes('-topmost', 1)
+        self.attributes('-topmost', 0)
+
     def create_widgets(self):
         self.display = tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable="")
         self.display.config(text=self.set_time_print)
@@ -81,6 +85,7 @@ class ConcentrateTimer(tk.Frame):
         self.goal_show_label["text"] = f"Goal: {self.clock_details.task_description}"
 
     def ask_reached_goal_reason(self):
+        self.raise_above_all()
         self.clock_details.reached_bool = mbox.askyesno("Goal reached?",
                                                         "Did you reach your goal?",
                                                         parent=self)
