@@ -49,11 +49,9 @@ class ConcentrateTimer(tk.Frame):
     def not_bring_to_front(self):
         self.master.attributes('-topmost', 0)
 
-    def flash_window(self, time=1000):
-            bg = self.display.cget("background")
-            fg = self.display.cget("foreground")
-            self.display.configure(background=fg, foreground=bg)
-            self.display.after(150, self.flash_window)
+    def flash_window(self, flashing_seconds=5):
+        # check flasshing_button.py
+        pass
 
     def create_widgets(self):
         self.display = tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable="")
@@ -139,8 +137,7 @@ class ConcentrateTimer(tk.Frame):
                         self.bring_to_front()
                         self.not_bring_to_front()
                     if self.silence:
-                        pass
-                        #self.flash_window()
+                        self.flash_window()
                     self.voice_message("break_over")
                     self.clock_details.end_break = time.time()
                     # TODO: Bug fix --This is reached before reason is filled. check line 134
