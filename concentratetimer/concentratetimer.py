@@ -44,8 +44,9 @@ class ConcentrateTimer(tk.Frame):
         self.clock_details.clock_count = db.get_clock_count(self.db_file)
         self.total_clock_counts.config(text=f"Done: {self.clock_details.clock_count}")
 
-    def bring_to_front(self, mbox=None):
+    def bring_to_front(self):
         self.master.attributes('-topmost', 1)
+    def not_bring_to_front(self):
         self.master.attributes('-topmost', 0)
 
     def flash_window(self, time=1000):
@@ -95,7 +96,9 @@ class ConcentrateTimer(tk.Frame):
 
     def ask_reached_goal_reason(self):
         self.clock_details.reached_bool = mbox.askyesno("Goal reached?",
-                                                        "Did you reach your goal?")
+                                                        "Did you reach your goal?",
+                                                        parent=self)
+
         if self.clock_details.reached_bool is False:
             self.clock_details.reason = simpledialog.askstring("Goal reached description",
                                                                "What happened? "
@@ -128,14 +131,13 @@ class ConcentrateTimer(tk.Frame):
                     self.display['fg'] = "Green"
                     if self.hide:
                         self.bring_to_front()
-                    # this following line is reached before the bring to front.
-                    self.bring_to_front()
                     self.ask_reached_goal_reason()
 
                 else:
                     # break is over. Record break over time.
                     if self.hide:
                         self.bring_to_front()
+                        self.not_bring_to_front()
                     if self.silence:
                         pass
                         #self.flash_window()
