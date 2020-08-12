@@ -1,63 +1,26 @@
 # ctimer
 
-
-.. image:: https://img.shields.io/pypi/v/ctimer.svg
-        :target: https://pypi.python.org/pypi/ctimer
-
-.. image:: https://img.shields.io/travis/zztin/ctimer.svg
-        :target: https://travis-ci.com/zztin/ctimer
-
-.. image:: https://readthedocs.org/projects/ctimer/badge/?version=latest
-        :target: https://ctimer.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
-
-
-
-
 This is a python implementation of a time management tool. Designed for MacOSX at the moment. CTimer is a free timer\
 tool to help you keep track of your productivity during the day, and help you set realistic goals for your day. \
 Contributions are welcome!
-
-
-
 
 ## Features
 
 * Provide a Tkinter GUI window for the ease of use for users.
 * Set 25 mins for focus time, and 5 mins for break time.
 * Set 8 clocks as aim for a day.
-* Goals / feedback of each clock & time span per day is kept in a local SQL database (named ctimer.db). Use command line tool sqlite3 you could check the entries.
+* Goals / feedback of each clock & time span per day is kept in a local SQL database (named ctimer.db).
 
-* TODO BUGFIX:
-        - self.display.config updates appears after the voice_messages (os.subprocess("say ...")
-        - 00:00 does not show.
-* TODO NEW FEATURES:
-        - Allowing setting customize time inteval, aim clock counts, goals for today (prompt text) on entry.
-        - Visual representation of clocks accomplished today (1. block representation of time similar to gantt chart.\
-          Compare across the week. 2. Histogram over time over the year-- this requires storage of data locally).
-        - Allows notes taking during the clock (note interruption, how many pauses you took etc.)
-        - Add tick-tock sound when clocks start.
 
-# Note: For checking the sqlite database
-A. drag and drop: https://inloop.github.io/sqlite-viewer/
-B. in command line
-1. >>> sqlite3 ./data/ctimer.db
-2. >>> select * from clock_details; <---remember the ";" in the end
-The entries should show! If not, try
-3. .tables
-This should show clock_details
+## Getting Started (How to use ctimer?)
 
-## Installation
-
-```
-python setup.py develop
-```
-
-## Launch the Application
-
-```
-ctimer
-```
+1. Go to a folder where you want to save this package and `git clone https://github.com/zztin/ctimer.git`
+2. `cd ctimer`
+3. `python setup.py develop`
+4. launch the app:`ctimer`
+5. Enjoy the Ctimer GUI!
+6. Optional: try `ctimer --help` for several launching options
+7. Wondering how your work proficiency is over the past period? try `ctimer --overall`
 
 ## Credits
 
@@ -66,7 +29,18 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 
-These links provided immense help for a head start for this project.
+These repositories and links provided ideas for implementations for this project.
 1. stackoverflow: https://stackoverflow.com/questions/47824017/starting-and-pausing-with-a-countdown-timer-in-tkinter
 2. stackexchange: https://apple.stackexchange.com/questions/3454/say-in-different-language
 3. tkinter tutorial
+4. https://github.com/rougier/calendar-heatmap
+5. https://github.com/MarvinT/calmap
+
+# Note: For checking the ctimer.db file (sqlite database) 
+A. drag and drop: https://inloop.github.io/sqlite-viewer/
+B. in command line
+        1. >>> sqlite3 ./data/ctimer.db
+        2. >>> select * from clock_details; <---remember the ";" in the end
+        The entries should show! If not, try
+        3. .tables
+        This should show "clock_details"
