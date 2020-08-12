@@ -22,7 +22,7 @@ jobs:
           python -m pip install invoke pytest pandas matplotlib
       - name: Customized calmap
         run: | 
-          git clone https://github/zztin/calmap; cd calmap; python setup.py install
+         git clone https://github.com/zztin/calmap; cd calmap; python setup.py install
       - name: Packaging
         run: |
           python ${GITHUB_WORKSPACE}/setup.py install
