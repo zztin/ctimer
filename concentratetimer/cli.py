@@ -14,6 +14,7 @@ def main():
     parser.add_argument("--overall", help="Show all clock counts across the years.", action="store_true")
     parser.add_argument("--hide", help="Display the timer always on top of other windows unless this statement is given"
                         , action="store_true")
+    parser.add_argument("--silence", help="Silence Mode (visual hint instead of audio hint.", action="store_true")
     args = parser.parse_args()
     # can also prompt user to enter a file path to store the database, but next time when the program launch
     #  it has to find it automatically. "from tkinter import filedialog"
@@ -31,7 +32,11 @@ def main():
         root = tk.Tk()
         if args.hide is False:
             root.attributes("-topmost", True)
-        app = concentratetimer.ConcentrateTimer(master=root, db_file=db_file, debug=args.debug)
+        app = concentratetimer.ConcentrateTimer(master=root,
+                                                db_file=db_file,
+                                                debug=args.debug,
+                                                hide=args.hide,
+                                                silence=args.silence)
         app.mainloop()
         return 0
 

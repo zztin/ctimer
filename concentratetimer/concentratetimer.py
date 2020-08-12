@@ -15,10 +15,12 @@ def time_print(time):
 
 
 class ConcentrateTimer(tk.Frame):
-    def __init__(self, master=None, db_file=None, debug=False):
+    def __init__(self, master=None, db_file=None, debug=False, hide=False, silence=False):
         super().__init__(master)
         self.db_file = db_file
         self.master = master
+        self.hide = hide
+        self.silence = silence
         master.title("Concentration Timer")
         self.test_volume(debug=debug)
         if debug:
@@ -42,9 +44,15 @@ class ConcentrateTimer(tk.Frame):
         self.clock_details.clock_count = db.get_clock_count(self.db_file)
         self.total_clock_counts.config(text=f"Done: {self.clock_details.clock_count}")
 
-    def raise_above_all(self):
+    def raise_window_top(self):
         self.master.attributes('-topmost', 1)
         self.master.attributes('-topmost', 0)
+
+    def flash_window(self, time=1000):
+            bg = self.display.cget("background")
+            fg = self.display.cget("foreground")
+            self.display.configure(background=fg, foreground=bg)
+            self.display.after(150, self.display.flash_window)
 
     def create_widgets(self):
         self.display = tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable="")
@@ -85,7 +93,8 @@ class ConcentrateTimer(tk.Frame):
         self.goal_show_label["text"] = f"Goal: {self.clock_details.task_description}"
 
     def ask_reached_goal_reason(self):
-        self.raise_above_all()
+        if self.hide:
+            self.raise_window_top()
         self.clock_details.reached_bool = mbox.askyesno("Goal reached?",
                                                         "Did you reach your goal?",
                                                         parent=self)
@@ -122,14 +131,18 @@ class ConcentrateTimer(tk.Frame):
                     self.ask_reached_goal_reason()
                 else:
                     # break is over. Record break over time.
-                    self.raise_above_all()
+                    if self.hide:
+                        self.raise_window_top()
+                    if self.silence:
+                        self.flash_window()
                     self.voice_message("break_over")
                     self.clock_details.end_break = time.time()
                     # TODO: Bug fix --This is reached before reason is filled. check line 134
                     db.db_add_clock_details(self.db_file, self.clock_details)
                     self.is_break = False
                     self.remaining_time = self.set_time
-                    self.display.config(text=time_print(self.set_time))
+                    self.display.config(text="Break's over!")
+                    # self.display.config(text=time_print(self.set_time))
                     self.start_pause_button['text'] = "Start"
                     self.start_pause_button['fg'] = "Green"
                     self.display['fg'] = "Black"
