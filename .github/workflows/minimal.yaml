@@ -19,8 +19,10 @@ jobs:
       - name: Dependency (pip)
         run: |
           # testing tools & visualization packages
-          python -m pip install invoke pytest pandas calmap matplotlib
-
+          python -m pip install invoke pytest pandas matplotlib
+      - name: Customized calmap
+        run: | 
+          git clone https://github/zztin/calmap; cd calmap; python setup.py install
       - name: Packaging
         run: |
           python ${GITHUB_WORKSPACE}/setup.py install
