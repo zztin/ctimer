@@ -12,7 +12,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", help="Shorten clock intervals for debugging purposes.",action="store_true")
     parser.add_argument("--overall", help="Show all clock counts across the years.", action="store_true")
-    parser.add_argument("--always_on_top", help="Display the timer always on top of other windows", default=True, action="store_true")
+    parser.add_argument("--hide", help="Display the timer always on top of other windows unless this statement is given"
+                        , action="store_true")
     args = parser.parse_args()
     # can also prompt user to enter a file path to store the database, but next time when the program launch
     #  it has to find it automatically. "from tkinter import filedialog"
@@ -28,7 +29,7 @@ def main():
         ccc.plot_calmap(events=events)
     else:
         root = tk.Tk()
-        if args.always_on_top:
+        if args.hide is False:
             root.attributes("-topmost", True)
         app = concentratetimer.ConcentrateTimer(master=root, db_file=db_file, debug=args.debug)
         app.mainloop()
