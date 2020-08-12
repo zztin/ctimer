@@ -39,8 +39,6 @@ These repositories and links provided ideas for implementations for this project
 #### Note: For checking the ctimer.db file (sqlite database) 
 A. drag and drop: https://inloop.github.io/sqlite-viewer/
 B. in command line
-        1. >>> sqlite3 ./data/ctimer.db
-        2. >>> select * from clock_details; <---remember the ";" in the end
-        The entries should show! If not, try
-        3. .tables
-        This should show "clock_details"
+1. `sqlite3 ./data/ctimer.db`
+2. `select * from clock_details;` <---remember the ";" in the end
+3. The entries should show! If not, try`.tables` to check the table names if there is a table call "clock_details"
