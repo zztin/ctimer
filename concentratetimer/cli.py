@@ -34,6 +34,8 @@ def main():
     parser.add_argument("--silence", help="Silence Mode (visual hint instead of audio hint.", action="store_true")
     parser.add_argument("--db", type=dir_path, help="The relative or absolute folder path to store and/or read db",
                         default="./data")
+    parser.add_argument('--version', action='version', version='%(prog)s 0.1.0')
+
     args = parser.parse_args()
 
     # can also prompt user to enter a file path to store the database, but next time when the program launch
