@@ -19,7 +19,7 @@ jobs:
       - name: Dependency (pip)
         run: |
           # testing tools & visualization packages
-          python -m pip install invoke pytest pandas matplotlib
+          python -m pip install invoke pytest pandas matplotlib bokeh
       - name: Customized calmap
         run: | 
          git clone https://github.com/zztin/calmap; cd calmap; python setup.py install

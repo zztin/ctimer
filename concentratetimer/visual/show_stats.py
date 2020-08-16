@@ -1,31 +1,66 @@
+import sqlite3
+import pandas as pd
+from datetime import datetime, date, time, timedelta
+from bokeh.models import ColumnDataSource
+from bokeh.plotting import figure, output_file, show
 
 
-# Yearly Calendar-heatmap with javascript module cal-heatmap
+def get_week_dates(day_count=7):
+    dates = [date.today() - timedelta(days=days) for days in reversed(range(0, day_count))]
+    # Convert to week day: .weekday()
+    return dates
 
 
+def get_plotting_df(df, week_para=None):
+    """
+    week: supply week number, default: this week.
 
-# another matplotlib version install with pip install calmap
-# https://pypi.org/project/calmap/
+    """
+    if week_para is None:
+        dates_axis = get_week_dates()
+        # print(dates_axis)
+        entries_on_day = []
+        top = []
+        bottom = []
+        weekdays = []
+        goals = []
+        reasons = []
+
+        for i, a_date in enumerate(dates_axis):
+            weekdays.append(a_date.weekday())
+            df_on_date = df[df['date'] == f"{a_date}"]
+            # print(df_on_date.shape[0])
+            date_beginning = datetime.combine(a_date, time(9, 0, 0))
+            length = df_on_date.shape[0]
+            entries_on_day += [i + 1] * length
+            start_time_in_seconds = [(datetime.fromtimestamp(int(float(x))) - date_beginning).total_seconds() for x in
+                                     df_on_date['start_clock'].values]
+            end_time_in_seconds = [(datetime.fromtimestamp(int(float(x))) - date_beginning).total_seconds() for x in
+                                   df_on_date['end_clock'].values]
+            # start time: top, end_time: bottom
+            top += start_time_in_seconds
+            bottom += end_time_in_seconds
+            goals += list(df_on_date['task_description'].values)
+            reasons += list(df_on_date['reason'].values)
+
+        left = [x - 0.5 for x in entries_on_day]
+        right = [x + 0.5 for x in entries_on_day]
+        data = {'top': top, 'bottom': bottom, 'left': left, 'right': right, "goals": goals, "reasons": reasons}
+        return data, weekdays
 
 
+def plot_timetable(path="./ctimer.db"):
+    conn = sqlite3.connect(path)
+    df = pd.read_sql_query("SELECT * FROM clock_details", conn)
+    conn.close()
+    output_file('rectangles.html')
+    p = figure(plot_width=400, plot_height=400)
+    data, weekdays = get_plotting_df(df)
+    source = ColumnDataSource(data)
+    p.quad(top=data["top"], bottom=data["bottom"], left=data["left"],
+           right=data["right"], color="#B3DE69", )
 
-#  Time schedule:
-# With floating inlet text about what you did in that clock
-# https://stackoverflow.com/questions/20892411/create-a-weekly-timetable-using-matplotlib
-# Bokeh patches
-# https://docs.bokeh.org/en/latest/docs/user_guide/plotting.html
-# Clock count
-# https://community.plotly.com/t/colored-calendar-heatmap-in-dash/10907/9
-# https://docs.bokeh.org/en/latest/docs/gallery/range_tool.html
-
-# https://plotly.com/python/gantt/
-# Gantt
-# https://sukhbinder.wordpress.com/2016/05/10/quick-gantt-chart-with-matplotlib/
-# import plotly.figure_factory as ff
-#
-# df = [dict(Task="Job A", Start='2009-01-01', Finish='2009-02-28'),
-#       dict(Task="Job B", Start='2009-03-05', Finish='2009-04-15'),
-#       dict(Task="Job C", Start='2009-02-20', Finish='2009-05-30')]
-#
-# fig = ff.create_gantt(df)
-# fig.show()
+    # Complaints reference fields not match up top, bottom, left, right.
+    # p.quad(top=top, bottom=bottom, left=left,
+    #       right=right, color="#B3DE69", source=source)
+    show(p)
