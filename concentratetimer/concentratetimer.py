@@ -44,19 +44,19 @@ class ConcentrateTimer(tk.Frame):
         self.clock_details.clock_count = db.get_clock_count(self.db_file)
         self.total_clock_counts.config(text=f"Done: {self.clock_details.clock_count}")
 
-    def raise_window_top(self):
+    def bring_to_front(self):
         self.master.attributes('-topmost', 1)
+    def not_bring_to_front(self):
         self.master.attributes('-topmost', 0)
 
-    def flash_window(self, time=1000):
-            bg = self.display.cget("background")
-            fg = self.display.cget("foreground")
-            self.display.configure(background=fg, foreground=bg)
-            self.display.after(150, self.display.flash_window)
+    def flash_window(self, flashing_seconds=5):
+        # check flasshing_button.py
+        pass
 
     def create_widgets(self):
         self.display = tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable="")
-        self.display.config(text=self.set_time_print)
+        self.display.config(text="Click start!")
+        # self.display.config(text=self.set_time_print)
         self.start_pause_button = tk.Button(self,
                                             text="Start",
                                             fg="Green",
@@ -93,11 +93,10 @@ class ConcentrateTimer(tk.Frame):
         self.goal_show_label["text"] = f"Goal: {self.clock_details.task_description}"
 
     def ask_reached_goal_reason(self):
-        if self.hide:
-            self.raise_window_top()
         self.clock_details.reached_bool = mbox.askyesno("Goal reached?",
                                                         "Did you reach your goal?",
                                                         parent=self)
+
         if self.clock_details.reached_bool is False:
             self.clock_details.reason = simpledialog.askstring("Goal reached description",
                                                                "What happened? "
@@ -128,11 +127,15 @@ class ConcentrateTimer(tk.Frame):
                     self.voice_message("done")
                     self.is_break = True
                     self.display['fg'] = "Green"
+                    if self.hide:
+                        self.bring_to_front()
                     self.ask_reached_goal_reason()
+
                 else:
                     # break is over. Record break over time.
                     if self.hide:
-                        self.raise_window_top()
+                        self.bring_to_front()
+                        self.not_bring_to_front()
                     if self.silence:
                         self.flash_window()
                     self.voice_message("break_over")
@@ -151,29 +154,32 @@ class ConcentrateTimer(tk.Frame):
             self.master.after(1000, self.countdown) # after: call this function in 1000 ms = 1 s. Recursive.
 
     def voice_message(self, message_type):
-        if message_type == "done":
-            if self.clock_details.clock_count == 1:
-                message = f"Beebeebeebee beebee. Done. You have achieved 1 clock today. " \
-                          f"Did you reach your goal?"
-            elif self.clock_details.clock_count % self.data.long_break_clock_count == 0:
-                message = f"Beebeebeebee. Hooray. You achieved {self.clock_details.clock_count} clocks already. " \
-                          f"Did you finish your goal?."
-            else:
-                message = f"Beebeebeebee beebee. Done. You have achieved {self.clock_details.clock_count} " \
-                          f"clocks today. Did you reach your goal?"
-        elif message_type == "start":
-            # TODO: if starting a new clock, new message: ready? set your goal
-            message = "ready? Start."
-        elif message_type == "pause":
-            message = "Pause"
-        elif message_type == "stop":
-            message = "Stop and recharge"
-        elif message_type == "break_over":
-            message = "Times up. Click start to start a new clock!"
-        elif message_type == "enjoy":
-            message = "Thanks! Enjoy your break!"
-        command = shlex.split(f"say {message}")
-        subprocess.run(command)
+        if self.silence:
+            pass
+        else:
+            if message_type == "done":
+                if self.clock_details.clock_count == 1:
+                    message = f"Beebeebeebee beebee. Done. You have achieved 1 clock today. " \
+                              f"Did you reach your goal?"
+                elif self.clock_details.clock_count % self.data.long_break_clock_count == 0:
+                    message = f"Beebeebeebee. Hooray. You achieved {self.clock_details.clock_count} clocks already. " \
+                              f"Did you finish your goal?."
+                else:
+                    message = f"Beebeebeebee beebee. Done. You have achieved {self.clock_details.clock_count} " \
+                              f"clocks today. Did you reach your goal?"
+            elif message_type == "start":
+                # TODO: if starting a new clock, new message: ready? set your goal
+                message = "ready? Start."
+            elif message_type == "pause":
+                message = "Pause"
+            elif message_type == "stop":
+                message = "Stop and recharge"
+            elif message_type == "break_over":
+                message = "Times up. Click start to start a new clock!"
+            elif message_type == "enjoy":
+                message = "Thanks! Enjoy your break!"
+            command = shlex.split(f"say {message}")
+            subprocess.run(command)
 
     def start_pause(self):
         if self.clock_ticking == False:
@@ -204,8 +210,8 @@ class ConcentrateTimer(tk.Frame):
         self.display['fg'] = "Black"
         self.clock_ticking = False
         self.remaining_time = self.set_time
-        #self.display.config(text="00:00")
-        self.display.config(text=self.set_time_print)
+        self.display.config(text="Click start!")
+        #self.display.config(text=self.set_time_print)
         self.voice_message("stop")
 
     def test_volume(self, debug=False):
