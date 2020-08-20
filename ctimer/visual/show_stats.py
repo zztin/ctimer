@@ -82,7 +82,7 @@ def plot_timetable(path, outpath):
     p.yaxis.ticker = [17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
     p.yaxis.major_label_overrides = {0: "8:00am", 1: "9:00am", 2: "10:00am", 3: "11:00am", 4: "12:00pm", 5: "1:00pm",
                                      6: "2:00pm", 7: "3:00pm", 8: "4:00pm", 9:"5:00pm", 10:"6:00pm", 11:"7:00pm",
-                                     12:"8:00pm", 13:"9:00pm", 14:"10:00pm", 15:"11:00pm", 16:"12:00pm", 17:"1:00pm"}
+                                     12:"8:00pm", 13:"9:00pm", 14:"10:00pm", 15:"11:00pm", 16:"12:00am", 17:"1:00am"}
 
     source = ColumnDataSource(data)
     p.quad(top=data["top"], bottom=data["bottom"], left=data["left"],
