@@ -46,7 +46,7 @@ def get_clock_count(db_file):
             clock_count = 0
     except Exception as e:
         # if the db is empty: error --list index out of range
-        print("Exception ctimer_db.py:49", e, ". Clock_count set to 0. Exception handled, keep running.")
+        #print("Exception ctimer_db.py:49", e, ". Clock_count set to 0. Exception handled, keep running.")
         clock_count = 0
     return clock_count
 
