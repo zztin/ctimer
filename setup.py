@@ -30,8 +30,8 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Topic :: Office/Business :: Scheduling',
     ],
-    description="This is a python implementation of a time management tool (a concentration timer)."
-                "Contributions are welcome",
+    description="Pomodoro is a famous time management technique aka tomato clock. Pomodoro C-timer is written in "
+                "python and tkinter. This is a well maintained project. Your contributions are welcome on github!",
     entry_points={
         'console_scripts': [
             'ctimer=ctimer.cli:main',
@@ -41,8 +41,8 @@ setup(
     license="Apache Software license",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
-    keywords=['timer', 'concentration', 'concentrate'],
-    name='ctimer',
+    keywords=['timer', 'concentration', 'pomodoro', 'time management'],
+    name='pomodoro-ctimer',
     packages=find_packages(include=['ctimer', 'ctimer.*']),
     test_suite='tests',
     tests_require=test_requirements,
