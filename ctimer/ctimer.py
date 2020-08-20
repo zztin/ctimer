@@ -235,54 +235,27 @@ class ConcentrateTimer(tk.Frame):
 
 
 class Meta():
-    def __init__(self, start_time_first_clock=None,
-                 start_time_this_clock=None,
-                 remaining_time=None,
-                 # total_clock_count=0,
+    def __init__(self,
                  aim_clock_count=8,
                  set_time=25*60,
                  break_time=5*60,
                  long_break_time=15*60,
                  long_break_clock_count=4):
         '''
-
-        :param start_time_first_clock: start time of the first clock of the day.
-        :param start_time_this_clock: start time of the current clock
         :param remaining_time: remaining time of the current clock
-        :param total_clock_count: achieved clock count while initializing the app
         :param aim_clock_count: aim for a day (8 clocks)
         :param set_time: the interval of a pomodoro clock (25 mins)
         :param break_time: the interval of a normal break (5 mins)
         :param long_break_time: the interval of a long break (15 mins)
         :param long_break_clock_count: when achieved n clocks, a long break is given (4 clocks, at least 2.)
         '''
-        self.start_time_first_clock = start_time_first_clock
-        self.start_time_this_clock = start_time_this_clock
-        # self.total_clock_count = int(round(total_clock_count)) # should not be access via outside unless special cases
         self.aim_clock_count = int(round(aim_clock_count))
         self.set_time = int(round(set_time))
-        self.remaining_time = remaining_time # Deprecated (used below)
         self.break_time= int(round(break_time))
         self.long_break_time = int(round(long_break_time))
         if long_break_clock_count < 2:
             self.long_break_clock_count = 2
         else:
             self.long_break_clock_count = int(round(long_break_clock_count))
-
-
-
-    # Deprecated
-    def pomodoro_loop(self):
-        while True:
-            self.countdown(self)
-            # self.total_clock_count += 1
-            print("Done! Next clock starting")
-
-    # Deprecated
-    def countdown(self):
-        while self.remaining_time:
-            print(time_print(self.remaining_time), end='\r')
-            time.sleep(1)
-            self.remaining_time -= 1
 
 
