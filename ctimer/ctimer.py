@@ -193,7 +193,9 @@ class ConcentrateTimer(tk.Frame):
             ### starting a new clock
 
             if self.remaining_time == self.set_time:
-                self.clock_details.date = f"{date.today()}"
+                if self.clock_details.date != f"{date.today()}":
+                    self.clock_details.date = f"{date.today()}"
+                    self.clock_details.clock_count = db.get_clock_count(self.db_file)
                 self.date.config(text=self.clock_details.date)
                 self.clock_details.start_clock = time.time()
                 self.get_goal()
