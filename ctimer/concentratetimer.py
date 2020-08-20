@@ -4,7 +4,7 @@ from datetime import date
 import tkinter as tk
 from tkinter import simpledialog
 from tkinter import messagebox as mbox
-import concentratetimer.ctimer_db as db
+import ctimer.ctimer_db as db
 # This code is an implementation upon the pomodoro technique from Cirillo, Francesco. If there is any ablation toward
 # their copyright, it is not our intention.
 

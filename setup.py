@@ -21,7 +21,7 @@ setup(
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: Apache License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
@@ -33,7 +33,7 @@ setup(
                 "Contributions are welcome",
     entry_points={
         'console_scripts': [
-            'ctimer=concentratetimer.cli:main',
+            'ctimer=ctimer.cli:main',
         ],
     },
     install_requires=requirements,
@@ -41,8 +41,8 @@ setup(
     long_description=readme + '\n\n' + history,
     include_package_data=True,
     keywords=['timer', 'concentration', 'concentrate'],
-    name='concentratetimer',
-    packages=find_packages(include=['concentratetimer', 'concentratetimer.*']),
+    name='ctimer',
+    packages=find_packages(include=['ctimer', 'ctimer.*']),
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/zztin/ctimer',

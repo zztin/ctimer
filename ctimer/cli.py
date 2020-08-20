@@ -1,11 +1,11 @@
-"""Console script for concentratetimer."""
-from concentratetimer import concentratetimer
+"""Console script for ctimer."""
+from ctimer import concentratetimer
 import tkinter as tk
-import concentratetimer.ctimer_db as db
+import ctimer.ctimer_db as db
 import sys
 import os
 import argparse
-from concentratetimer.visual import clock_count_cal as ccc
+from ctimer.visual import clock_count_cal as ccc
 
 
 def main():

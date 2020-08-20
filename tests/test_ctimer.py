@@ -5,7 +5,7 @@
 import pytest
 
 
-from concentratetimer import concentratetimer
+from ctimer import concentratetimer
 
 
 @pytest.fixture
