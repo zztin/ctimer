@@ -46,7 +46,7 @@ setup(
     packages=find_packages(include=['ctimer', 'ctimer.*']),
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/zztin/ctimer',
+    url='https://github.com/zztin/pomodoro-ctimer',
     version='1.0.0',
     zip_safe=False,
 )
