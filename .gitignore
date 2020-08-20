@@ -1,5 +1,6 @@
 # Temporary reference file
 ctimer/visual/alt_clock_count_cal.py
+ctimer/flashing_button.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
