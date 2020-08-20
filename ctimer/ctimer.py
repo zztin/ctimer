@@ -104,7 +104,6 @@ class ConcentrateTimer(tk.Frame):
                                                                "What needs to modify to "
                                                                "have a realistic goal? ",
                                                                parent=self)
-        self.voice_message("enjoy")
 
 
     def countdown(self):
@@ -122,15 +121,20 @@ class ConcentrateTimer(tk.Frame):
                     self.total_clock_counts.config(text=f"Total clocks: {self.clock_details.clock_count}")
                     if self.clock_details.clock_count % self.long_break_clock_count == 0:
                         self.remaining_time = self.set_long_break_time
+                        long = True
                     else:
                         self.remaining_time = self.set_break_time
+                        long = False
                     self.voice_message("done")
                     self.is_break = True
                     self.display['fg'] = "Green"
                     if self.hide:
                         self.bring_to_front()
                     self.ask_reached_goal_reason()
-
+                    if long:
+                        self.voice_message("enjoy_long")
+                    else:
+                        self.voice_message("enjoy")
                 else:
                     # break is over. Record break over time.
                     if self.hide:
@@ -178,6 +182,8 @@ class ConcentrateTimer(tk.Frame):
                 message = "Times up. Click start to start a new clock!"
             elif message_type == "enjoy":
                 message = "Thanks! Enjoy your break!"
+            elif message_type == "enjoy_long":
+                message = "Thanks! Enjoy your long break!"
             command = shlex.split(f"say {message}")
             subprocess.run(command)
 

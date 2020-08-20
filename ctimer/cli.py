@@ -1,5 +1,5 @@
 """Console script for ctimer."""
-from ctimer import concentratetimer
+from ctimer import ctimer
 import tkinter as tk
 import ctimer.ctimer_db as db
 import sys
@@ -20,7 +20,7 @@ def main():
     args = parser.parse_args()
     # can also prompt user to enter a file path to store the database, but next time when the program launch
     #  it has to find it automatically. "from tkinter import filedialog"
-    path = os.path.dirname(concentratetimer.__file__).rsplit("/",1)[0]
+    path = os.path.dirname(ctimer.__file__).rsplit("/", 1)[0]
     if os.path.exists(f"{path}/data"):
         pass
     else:
@@ -40,11 +40,11 @@ def main():
         root = tk.Tk()
         if args.hide is False:
             root.attributes("-topmost", True)
-        app = concentratetimer.ConcentrateTimer(master=root,
-                                                db_file=db_file,
-                                                debug=args.debug,
-                                                hide=args.hide,
-                                                silence=args.silence)
+        app = ctimer.ConcentrateTimer(master=root,
+                                      db_file=db_file,
+                                      debug=args.debug,
+                                      hide=args.hide,
+                                      silence=args.silence)
         app.mainloop()
         return 0
 
