@@ -5,12 +5,14 @@ import ctimer.ctimer_db as db
 import sys
 import os
 import argparse
-from ctimer.visual import clock_count_cal as ccc
+from ctimer.visual import show_stats as ss
+
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", help="Shorten clock intervals for debugging purposes.",action="store_true")
+    parser.add_argument("--stats", help="Show weekly stats of clock counts this week.", action="store_true")
     parser.add_argument("--overall", help="Show all clock counts across the years.", action="store_true")
     parser.add_argument("--hide", help="Display the timer always on top of other windows unless this statement is given"
                         , action="store_true")
@@ -31,7 +33,9 @@ def main():
         db.create_connection(db_file) # create if not exist
     if args.overall:
         events = db.get_yearly_stats(db_file)
-        ccc.plot_calmap(events=events)
+        ss.plot_calmap(events=events)
+    elif args.stats:
+        ss.plot_timetable(path=db_file, outpath=f"{path}/data/")
     else:
         root = tk.Tk()
         if args.hide is False:

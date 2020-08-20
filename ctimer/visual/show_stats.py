@@ -1,23 +1,42 @@
 import sqlite3
-import pandas as pd
 from datetime import datetime, date, time, timedelta
 from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure, output_file, show
+import numpy as np;
+np.random.seed(sum(map(ord, 'calmap')))
+import pandas as pd
+import calmap
+import matplotlib.pyplot as plt
+
+# For testing plot_calmap
+def _get_random_events():
+    """
+    We create 500 events as random float values assigned to random days over a
+    700-day period.
+    """
+    all_days = pd.date_range("1/15/2020", periods=1200, freq="4H")
+    days = np.random.choice(all_days, 31)
+    data = pd.Series(np.random.randn(len(days)), index=days)
+    return data
+
+# plot yearly stats
+def plot_calmap(events=_get_random_events()):
+    # cmap choices: viridis
+    calmap.calendarplot(events, monthticks=True, daylabels='MTWTFSS',
+                        cmap='PuBuGn', fillcolor='whitesmoke', linewidth=1, vmin=0,
+                        fig_kws=dict(figsize=(12, 6)), fig_suptitle="CTimer clock count")
+
+    plt.show()
 
 
-def get_week_dates(day_count=7):
-    dates = [date.today() - timedelta(days=days) for days in reversed(range(0, day_count))]
-    # Convert to week day: .weekday()
-    return dates
-
-
-def get_plotting_df(df, week_para=None):
+# plot weekly ctimer stats with bokeh
+def _get_plotting_df(df, week_para=None, day_count=7):
     """
     week_para: supply week number, default: this week. TODO: to be implemented.
 
     """
     if week_para is None:
-        dates_axis = get_week_dates()
+        dates_axis = dates = [date.today() - timedelta(days=days) for days in reversed(range(0, day_count))]
         # print(dates_axis)
         entries_on_day = []
         top = []
@@ -47,12 +66,12 @@ def get_plotting_df(df, week_para=None):
         return data, weekdays
 
 
-def plot_timetable(path="./ctimer.db", outfile="../../data/ctimer_weekly.html"):
+def plot_timetable(path, outpath):
     conn = sqlite3.connect(path)
     df = pd.read_sql_query("SELECT * FROM clock_details", conn)
     conn.close()
-    output_file(outfile)
-    data, weekdays = get_plotting_df(df)
+    output_file(f"{outpath}/ctimer_weekly_{date.today()}.html")
+    data, weekdays = _get_plotting_df(df)
     weekday_num_to_str = {0:"Mon", 1:"Tue", 2:"Wed", 3:"Thu", 4:"Fri", 5:"Sat", 6:"Sun"}
     p = figure(plot_width=400, plot_height=400, x_range=[0, 8], y_range=[17, 0], title="Your weekly ctimer")
     p.xaxis.ticker = [0, 1, 2, 3, 4, 5, 6, 7, 8]
@@ -74,4 +93,3 @@ def plot_timetable(path="./ctimer.db", outfile="../../data/ctimer_weekly.html"):
     #       right=right, color="#B3DE69", source=source)
     show(p)
 
-plot_timetable(path="../../data/ctimer.db")
