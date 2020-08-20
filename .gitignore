@@ -112,6 +112,6 @@ ENV/
 .idea/
 
 # Data
-data/ctimer.db
+data/
 # travis
 .travis.yml
