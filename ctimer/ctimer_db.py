@@ -1,9 +1,11 @@
 import sqlite3
 from sqlite3 import Error
+from datetime import date
+from datetime import datetime
 from collections import namedtuple
 from dataclasses import dataclass
 from dataclasses import astuple
-
+import pandas as pd
 
 @dataclass(init=True, repr=True)
 class Clock_details:
@@ -16,6 +18,37 @@ class Clock_details:
     task_description: str = "Task description to be set"
     reached_bool: bool = False
     reason: str = "N.A."
+
+
+def get_yearly_stats(db_file):
+    conn = create_connection(db_file)
+    df = pd.read_sql_query("SELECT * FROM clock_details", conn)
+
+    # new feature while including all clocks (also halted clocks)
+    # df[df['clock_done'] == True]['clock_start']
+    start_series_raw = df['start_clock']
+    start_series = [datetime.fromtimestamp(int(float(x))) for x in start_series_raw]
+    events = pd.DataFrame(index=start_series, columns=["count"])
+    events['count'] = 1
+    events = events['count']
+    return events
+
+def get_clock_count(db_file):
+    # create a database connection
+    conn = create_connection(db_file)
+    c = conn.cursor()
+    # Create table
+    try:
+        last_row = c.execute('''SELECT * FROM clock_details ORDER BY id DESC LIMIT 1;''').fetchall()[-1]
+        if last_row[1] == f"{date.today()}":
+            clock_count = last_row[2]
+        else:
+            clock_count = 0
+    except Exception as e:
+        # if the db is empty: error --list index out of range
+        print("Exception ctimer_db.py:49", e, ". Clock_count set to 0. Exception handled, keep running.")
+        clock_count = 0
+    return clock_count
 
 
 def db_add_clock_details(db_file, clock_instance):
@@ -49,6 +82,7 @@ def create_table(db_file):
         conn.close()
     except Error as e:
         print(e)
+
 
 
 def create_connection(db_file):

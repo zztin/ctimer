@@ -1,3 +1,5 @@
+# Temporary reference file
+ctimer/visual/alt_clock_count_cal.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -113,5 +115,6 @@ ENV/
 
 # Data
 data/
+data/ctimer.db
 # travis
 .travis.yml

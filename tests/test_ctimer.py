@@ -5,12 +5,12 @@
 import pytest
 
 
-from concentratetimer import concentratetimer
+from ctimer import ctimer
 
 
 @pytest.fixture
 def metadata_class():
-    return concentratetimer.Meta
+    return ctimer.Meta
 
 
 def test_metadata_default(metadata_class):
