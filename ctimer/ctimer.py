@@ -118,8 +118,11 @@ class ConcentrateTimer(tk.Frame):
                     self.display.config(text="Done!")
                     self.clock_details.clock_count += 1
                     self.clock_details.end_clock = time.time()
-                    self.total_clock_counts.config(text=f"Total clocks: {self.clock_details.clock_count}")
-                    if self.clock_details.clock_count % self.long_break_clock_count == 0:
+                    # if end_break == end_clock :
+                    # the app has been force ended during the clock. Update the break time while termination.
+                    self.clock_details.end_break = time.time()
+                    self.total_clock_counts.config(text=f"Total clocks: {self.data.total_clock_count}")
+                    if self.data.total_clock_count % self.long_break_clock_count == 0:
                         self.remaining_time = self.set_long_break_time
                         long = True
                     else:
@@ -218,6 +221,8 @@ class ConcentrateTimer(tk.Frame):
         self.display['fg'] = "Black"
         self.clock_ticking = False
         self.remaining_time = self.set_time
+        # # this clock is shorter than 25 mins
+        # self.clock_details.end_clock = time.time()
         self.display.config(text="Click start!")
         #self.display.config(text=self.set_time_print)
         self.voice_message("stop")
@@ -231,8 +236,17 @@ class ConcentrateTimer(tk.Frame):
         command = shlex.split(f"say {message}")
         subprocess.run(command)
 
-
-
+    # def on_closing(self):
+    #     if self.is_break:
+    #         # premature end break
+    #         self.clock_details.end_break = time.time()
+    #     else:
+    #         if self.clock_ticking:
+    #             # premature end clock
+    #             self.clock_details.end_clock = time.time()
+    #         else:
+    #             pass
+    #     return True
 
 class Meta():
     def __init__(self,
