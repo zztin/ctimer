@@ -268,6 +268,7 @@ class ConcentrateTimer(tk.Frame):
         self.is_break = False
         self.display['fg'] = "Black"
         self.clock_ticking = False
+        safe_closing_data_entry(self.db_file, self.clock_details)
         self.remaining_time = self.set_time
         # # this clock is shorter than 25 mins
         # self.clock_details.end_clock = time.time()
