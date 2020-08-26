@@ -9,18 +9,35 @@ import ctimer.ctimer_db as db
 # their copyright, it is not our intention.
 
 
+def safe_closing_data_entry(db_file, current_clock_details):
+    if current_clock_details.start_clock == 0:
+        pass
+    elif current_clock_details.end_break != 0:
+        pass
+    else:
+        if current_clock_details.end_clock == 0:
+            current_clock_details.end_clock = time.time()
+            current_clock_details.end_break = current_clock_details.end_clock
+        elif current_clock_details.end_break == 0:
+            current_clock_details.end_break = time.time()
+        db.db_add_clock_details(db_file, current_clock_details)
+
+
 def maintk(db_file, hide=False, debug=False, silence=False):
     root = tk.Tk()
 
     def on_closing():
         if mbox.askokcancel("Quit", "Do you want to quit?"):
+            safe_closing_data_entry(db_file, current_clock_details)
             root.destroy()
 
     root.protocol("WM_DELETE_WINDOW", on_closing)
     if hide is False:
         root.attributes("-topmost", True)
+    current_clock_details = db.Clock_details()
     ConcentrateTimer(master=root,
                      db_file=db_file,
+                     clock_details=current_clock_details,
                      debug=debug,
                      hide=hide,
                      silence=silence).pack()
@@ -35,7 +52,7 @@ def time_print(time):
 
 
 class ConcentrateTimer(tk.Frame):
-    def __init__(self, master=None, db_file=None, debug=False, hide=False, silence=False):
+    def __init__(self, master=None, db_file=None, clock_details=None, debug=False, hide=False, silence=False):
         super().__init__(master)
         self.db_file = db_file
         self.master = master
@@ -44,7 +61,7 @@ class ConcentrateTimer(tk.Frame):
         master.title("Concentration Timer")
         self.test_volume(debug=debug)
         if debug:
-            self.data = Meta(set_time=3, break_time=3, long_break_time=5, long_break_clock_count=2)
+            self.data = Meta(set_time=5, break_time=5, long_break_time=7, long_break_clock_count=2)
         else:
             self.data = Meta()
         self.clock_ticking = False
@@ -56,18 +73,28 @@ class ConcentrateTimer(tk.Frame):
         self.remaining_time = self.set_time
         self.long_break_clock_count = self.data.long_break_clock_count
         self.pack()
-        self.clock_details = db.Clock_details()
+        self.clock_details = clock_details
+        # get new clock entry
         self.clock_details.date = f"{date.today()}"
+        self.clock_details.clock_count = db.get_clock_count(self.db_file)
         self.create_widgets()
         self.goal = None
-        self.clock_details = db.Clock_details()
-        self.clock_details.clock_count = db.get_clock_count(self.db_file)
         self.total_clock_counts.config(text=f"Done: {self.clock_details.clock_count}")
         # master.protocol("WM_DELETE_WINDOW", on_closing)
 
+    def get_new_clock_entry(self):
+        # start, end clock time =0
+        self.clock_details.start_clock = 0
+        self.clock_details.end_clock = 0
+        self.clock_details.end_break = 0
+        self.clock_details.task_title = "Task title TO BE IMPLEMENT"
+        self.clock_details.task_description = "Task description to be set"
+        self.clock_details.reached_bool = False
+        self.clock_details.reason = "N.A."
 
     def bring_to_front(self):
         self.master.attributes('-topmost', 1)
+
     def not_bring_to_front(self):
         self.master.attributes('-topmost', 0)
 
@@ -143,8 +170,8 @@ class ConcentrateTimer(tk.Frame):
                     # if end_break == end_clock :
                     # the app has been force ended during the clock. Update the break time while termination.
                     self.clock_details.end_break = time.time()
-                    self.total_clock_counts.config(text=f"Total clocks: {self.data.total_clock_count}")
-                    if self.data.total_clock_count % self.long_break_clock_count == 0:
+                    self.total_clock_counts.config(text=f"Total clocks: {self.clock_details.clock_count}")
+                    if self.clock_details.clock_count % self.long_break_clock_count == 0:
                         self.remaining_time = self.set_long_break_time
                         long = True
                     else:
@@ -214,14 +241,13 @@ class ConcentrateTimer(tk.Frame):
 
     def start_pause(self):
         if self.clock_ticking == False:
-            self.voice_message("start")
-            ### starting a new clock
-
             if self.remaining_time == self.set_time:
+                self.voice_message("start")
                 if self.clock_details.date != f"{date.today()}":
                     self.clock_details.date = f"{date.today()}"
                     self.clock_details.clock_count = db.get_clock_count(self.db_file)
                 self.date.config(text=self.clock_details.date)
+                self.get_new_clock_entry()
                 self.clock_details.start_clock = time.time()
                 self.get_goal()
             self.clock_details.start_clock = time.time()
