@@ -8,6 +8,26 @@ import ctimer.ctimer_db as db
 # This code is an implementation upon the pomodoro technique from Cirillo, Francesco. If there is any ablation toward
 # their copyright, it is not our intention.
 
+
+def maintk(db_file, hide=False, debug=False, silence=False):
+    root = tk.Tk()
+
+    def on_closing():
+        if mbox.askokcancel("Quit", "Do you want to quit?"):
+            root.destroy()
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+    if hide is False:
+        root.attributes("-topmost", True)
+    ConcentrateTimer(master=root,
+                     db_file=db_file,
+                     debug=debug,
+                     hide=hide,
+                     silence=silence).pack()
+    root.mainloop()
+    return 0
+
+
 def time_print(time):
     mins, secs = divmod(time, 60)
     print_time = '{:02d}:{:02d}'.format(mins, secs)
@@ -43,6 +63,8 @@ class ConcentrateTimer(tk.Frame):
         self.clock_details = db.Clock_details()
         self.clock_details.clock_count = db.get_clock_count(self.db_file)
         self.total_clock_counts.config(text=f"Done: {self.clock_details.clock_count}")
+        # master.protocol("WM_DELETE_WINDOW", on_closing)
+
 
     def bring_to_front(self):
         self.master.attributes('-topmost', 1)
@@ -236,17 +258,6 @@ class ConcentrateTimer(tk.Frame):
         command = shlex.split(f"say {message}")
         subprocess.run(command)
 
-    # def on_closing(self):
-    #     if self.is_break:
-    #         # premature end break
-    #         self.clock_details.end_break = time.time()
-    #     else:
-    #         if self.clock_ticking:
-    #             # premature end clock
-    #             self.clock_details.end_clock = time.time()
-    #         else:
-    #             pass
-    #     return True
 
 class Meta():
     def __init__(self,
