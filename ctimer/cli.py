@@ -6,6 +6,7 @@ import sys
 import os
 import argparse
 from ctimer.visual import show_stats as ss
+from tkinter import messagebox
 
 
 
@@ -37,16 +38,7 @@ def main():
     elif args.stats:
         ss.plot_timetable(path=db_file, outpath=f"{path}/data/")
     else:
-        root = tk.Tk()
-        if args.hide is False:
-            root.attributes("-topmost", True)
-        app = ctimer.ConcentrateTimer(master=root,
-                                      db_file=db_file,
-                                      debug=args.debug,
-                                      hide=args.hide,
-                                      silence=args.silence)
-        app.mainloop()
-        return 0
+        ctimer.maintk(db_file, hide=args.hide, debug=args.debug, silence=args.silence)
 
 
 if __name__ == "__main__":
