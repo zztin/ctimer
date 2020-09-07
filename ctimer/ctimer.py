@@ -5,8 +5,6 @@ import tkinter as tk
 from tkinter import simpledialog
 from tkinter import messagebox as mbox
 import ctimer.ctimer_db as db
-# This code is an implementation upon the pomodoro technique from Cirillo, Francesco. If there is any ablation toward
-# their copyright, it is not our intention.
 
 
 def safe_closing_data_entry(db_file, current_clock_details):
@@ -154,7 +152,6 @@ class ConcentrateTimer(tk.Frame):
                                                                "have a realistic goal? ",
                                                                parent=self)
 
-
     def countdown(self):
         if self.clock_ticking:
             self.remaining_time -= 1
@@ -262,6 +259,7 @@ class ConcentrateTimer(tk.Frame):
             self.start_pause_button['text'] = "Start"
             self.start_pause_button['fg'] = "Green"
             self.clock_ticking = False
+
     # premature terminate clock
     def terminate(self):
         self.start_pause_button['text'] = "Start"
