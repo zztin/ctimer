@@ -246,6 +246,7 @@ class ConcentrateTimer(tk.Frame):
                 if self.clock_details.date != f"{date.today()}":
                     self.clock_details.date = f"{date.today()}"
                     self.clock_details.clock_count = db.get_clock_count(self.db_file)
+                    self.total_clock_counts.config(text=f"Total clocks: {self.clock_details.clock_count}")
                 self.date.config(text=self.clock_details.date)
                 self.get_new_clock_entry()
                 self.clock_details.start_clock = time.time()
