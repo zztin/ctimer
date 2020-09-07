@@ -240,7 +240,7 @@ class ConcentrateTimer(tk.Frame):
             subprocess.run(command)
 
     def start_pause(self):
-        if self.clock_ticking == False:
+        if not self.clock_ticking:
             if self.remaining_time == self.set_time:
                 self.voice_message("start")
                 if self.clock_details.date != f"{date.today()}":
