@@ -20,9 +20,13 @@ jobs:
         run: |
           # testing tools & visualization packages
           python -m pip install invoke pytest pandas matplotlib bokeh
+          pip install -r requirements.txt
       - name: Customized calmap
-        run: | 
-         git clone https://github.com/zztin/calmap; cd calmap; python setup.py install
+        run: |
+          # it matters to use this repo to adapt the customized bug fix
+          git clone https://github.com/zztin/calmap
+          cd calmap
+          python setup.py install
       - name: Packaging
         run: |
           python ${GITHUB_WORKSPACE}/setup.py install
@@ -31,4 +35,3 @@ jobs:
       - name: PyTest Cases
         run: |
           inv test
- 
