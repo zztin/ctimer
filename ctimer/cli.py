@@ -19,6 +19,7 @@ def create_cache_folder():
         pass
     else:
         os.makedirs(cache_path)
+    return cache_path
 
 def yesno(question):
     prompt = f"{question}? (y/n)"
@@ -31,42 +32,48 @@ def yesno(question):
     return False
 
 
-def get_cache_filepath(arg_db):
+def get_cache_filepath(arg_db, debug=False):
+    cache_path = create_cache_folder()
+    if debug:
+        filename = "db_debug_path.txt"
+    else:
+        filename = "db_path.txt"
     # read cache
     try:
-        with open(cache_path+"db_path.txt", "r") as db_path_file: 
+        with open(cache_path+filename, "r") as db_path_file: 
             stored_path = db_path_file.readline().strip()
         # Continue if file exists.
         if arg_db == None:
             return stored_path
         else:
             # Not first time user. But provided new db path.
-            given_path = str(os.path.join(root_path, arg_db)))
+            given_path = str(os.path.join(root_path, arg_db))
             if given_path != stored_path:
                 if yesno(f"You have a previously created database stored at {stored_path}. Are you sure you want to create a new database? \
                           If not, type 'n', previously saved db will be used. If you want to create new database, type 'y', a new database will be \
                           created and default database path will be changed."):
                     cwd = os.getcwd()
                     new_path = str(os.path.join(cwd, arg_db)) 
-                    with open(cache_path+"db_path.txt", "w") as db_path_file:
+                    with open(cache_path+filename, "w") as db_path_file:
                         db_path_file.write(new_path)
                     return new_path
                 else:
                      # used original path. Ignore --db path.
                     return stored_path
     except Exception as e:
+        
         # File does not exist. First time user. Create db_path.txt file
         if arg_db == None:
             new_path = cache_path
         else:
-            new_path = str(os.path.join(root_path, arg_db)))
+            new_path = str(os.path.join(root_path, arg_db))
             # create default path at HOME/.ctimer
-            with open(cache_path+"db_path.txt", "w") as db_path_file:
-                db_path_file.write(new_path)
+        with open(cache_path+filename, "w") as db_path_file:
+            db_path_file.write(new_path)
         return new_path
 
 
-def  dir_path(rdir_path):
+def dir_path(rdir_path):
     root_path = str(Path.home())
     full_path = os.path.join(root_path, rdir_path)
 
@@ -96,15 +103,14 @@ def main():
 
     args = parser.parse_args()
     # cache
-    create_cache_folder()
-    get_cache_filepath(args.db)
-    logging.info(f"{args.db} is where the db stored in.")
+    db_path = get_cache_filepath(args.db, debug=args.debug)
+    logging.info(f"{db_path} is where the db stored in.")
 
     if args.debug:
-        db_file = f"{args.db}/ctimer_debug.db"
+        db_file = f"{db_path}/ctimer_debug.db"
         db.create_connection(db_file) # create if not exist
     else:
-        db_file = f"{args.db}/ctimer.db"
+        db_file = f"{db_path}/ctimer.db"
         db.create_connection(db_file) # create if not exist
     if args.overall:
         events = db.get_yearly_stats(db_file)
