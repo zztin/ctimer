@@ -4,8 +4,17 @@
 
 import pytest
 
-
 from ctimer import ctimer
+import datetime
+from datetime import date, time
+
+def mock_midnight(mocker):
+    mocker.patch('date.today', return_value=date(2019, 9, 8))
+    mocker.patch('time.time', datetime.combine(date(2019,9,8)), time(23, 59, 55))
+    db_file = f"../data/ctimer_pytest_mock.db"
+    ctimer.maintk(db_file, hide=False, debug=True, silence=False)
+
+    # mock fast clock ticking
 
 
 @pytest.fixture
@@ -59,3 +68,5 @@ def test_metadata_long_break_clock_count_5(metadata_class):
     metadata_default = metadata_class(long_break_clock_count=5.5)
 
     assert metadata_default.long_break_clock_count == 6
+
+

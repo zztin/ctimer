@@ -1,5 +1,3 @@
-(Thanks for sending a pull request! Please fill in the following content to let us know better about this change.)
-
 ## Types of changes
 Please put an `x` in the box that applies
 
