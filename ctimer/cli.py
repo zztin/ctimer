@@ -90,7 +90,7 @@ def main():
     parser.add_argument("--hide", help="Display the timer always on top of other windows unless this statement is given"
                         , action="store_true")
     parser.add_argument("--silence", help="Silence Mode (visual hint instead of audio hint.", action="store_true")
-    parser.add_argument("--db", type=dir_path, help="The relative or absolute folder path to store and/or read db",
+    parser.add_argument("--db", type=dir_path, help="The relative or absolute folder path to store and/or read db. When leave empty: look for previous location, otherwise create new at HOME/.ctimer",
                         default=None)
     parser.add_argument('--version', action='version', version='%(prog)s 0.1.0')
 
