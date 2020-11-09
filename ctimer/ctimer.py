@@ -80,7 +80,6 @@ class ConcentrateTimer(tk.Frame):
         self.total_clock_counts.config(text=f"Done: {self.clock_details.clock_count}")
         # master.protocol("WM_DELETE_WINDOW", on_closing)
 
-<<<<<<< HEAD:ctimer/ctimer.py
     def get_new_clock_entry(self):
         # start, end clock time =0
         self.clock_details.start_clock = 0
@@ -94,10 +93,6 @@ class ConcentrateTimer(tk.Frame):
     def bring_to_front(self):
         self.master.attributes('-topmost', 1)
 
-=======
-    def bring_to_front(self):
-        self.master.attributes('-topmost', 1)
->>>>>>> bbeeacf6e4bf8bb6ba30b2e54ba2ed451c5500a4:concentratetimer/concentratetimer.py
     def not_bring_to_front(self):
         self.master.attributes('-topmost', 0)
 
@@ -185,14 +180,10 @@ class ConcentrateTimer(tk.Frame):
                     if self.hide:
                         self.bring_to_front()
                     self.ask_reached_goal_reason()
-<<<<<<< HEAD:ctimer/ctimer.py
                     if long:
                         self.voice_message("enjoy_long")
                     else:
                         self.voice_message("enjoy")
-=======
-
->>>>>>> bbeeacf6e4bf8bb6ba30b2e54ba2ed451c5500a4:concentratetimer/concentratetimer.py
                 else:
                     # break is over. Record break over time.
                     if self.hide:
@@ -240,11 +231,8 @@ class ConcentrateTimer(tk.Frame):
                 message = "Times up. Click start to start a new clock!"
             elif message_type == "enjoy":
                 message = "Thanks! Enjoy your break!"
-<<<<<<< HEAD:ctimer/ctimer.py
             elif message_type == "enjoy_long":
                 message = "Thanks! Enjoy your long break!"
-=======
->>>>>>> bbeeacf6e4bf8bb6ba30b2e54ba2ed451c5500a4:concentratetimer/concentratetimer.py
             command = shlex.split(f"say {message}")
             subprocess.run(command)
 
@@ -281,11 +269,8 @@ class ConcentrateTimer(tk.Frame):
         self.clock_ticking = False
         safe_closing_data_entry(self.db_file, self.clock_details)
         self.remaining_time = self.set_time
-<<<<<<< HEAD:ctimer/ctimer.py
         # # this clock is shorter than 25 mins
         # self.clock_details.end_clock = time.time()
-=======
->>>>>>> bbeeacf6e4bf8bb6ba30b2e54ba2ed451c5500a4:concentratetimer/concentratetimer.py
         self.display.config(text="Click start!")
         #self.display.config(text=self.set_time_print)
         self.voice_message("stop")

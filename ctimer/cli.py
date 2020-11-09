@@ -8,11 +8,10 @@ import argparse
 from ctimer.visual import show_stats as ss
 from tkinter import messagebox
 import logging
-from ctimer.visual import clock_count_cal as ccc
 
 
 def dir_path(rdir_path):
-    root_path = os.path.dirname(concentratetimer.__file__).rsplit("/",1)[0]
+    root_path = os.path.dirname(ctimer.__file__).rsplit("/",1)[0]
     full_path = os.path.join(root_path, rdir_path)
 
     if os.path.exists(full_path):
