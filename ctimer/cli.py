@@ -1,5 +1,6 @@
 """Console script for ctimer."""
 from ctimer import ctimer
+import ctimer.ctimer as ct
 import tkinter as tk
 import ctimer.ctimer_db as db
 import sys
@@ -31,6 +32,13 @@ def yesno(question):
         return True
     return False
 
+def ask_customized():
+    set_time = input(f"Desired length of clock? (min, default=25): ")
+    break_time = input(f"Desired length of normal breaks? (min, default=5): ")
+    long_break_time = input(f"Desired length of long break? (min, default=15): ")
+    long_break_clock_count= input(f"Every N break you want to have a long break? (N, default=4): ")
+    aim_clock_count = input("How many clocks are you aiming today? (N, default=8): ")
+    return ct.Meta(set_time=int(set_time)*60, break_time=int(break_time)*60, long_break_time=int(long_break_time)*60, long_break_clock_count=int(long_break_clock_count), aim_clock_count=int(aim_clock_count))
 
 def get_cache_filepath(arg_db, debug=False):
     cache_path = create_cache_folder()
@@ -99,8 +107,8 @@ def main():
     parser.add_argument("--silence", help="Silence Mode (visual hint instead of audio hint.", action="store_true")
     parser.add_argument("--db", type=dir_path, help="The relative or absolute folder path to store and/or read db. When leave empty: look for previous location, otherwise create new at HOME/.ctimer",
                         default=None)
-    parser.add_argument('--version', action='version', version='%(prog)s 0.1.0')
-
+    parser.add_argument("--version", action="version", version="%(prog)s 1.0.0")
+    parser.add_argument("--cus", action="store_true", help="give this argument if you want to customize length of clocks/breaks, and aim clock count. You will enter a commandline interface.")
     args = parser.parse_args()
     # cache
     db_path = get_cache_filepath(args.db, debug=args.debug)
@@ -118,8 +126,12 @@ def main():
     elif args.stats:
         ss.plot_timetable(path=db_file, outpath=f"./")
     else:
-        ctimer.maintk(db_file, hide=args.hide, debug=args.debug, silence=args.silence)
-
+        if args.cus:
+            cus_meta = ask_customized()
+            ctimer.maintk(db_file, hide=args.hide, debug=args.debug, silence=args.silence, meta=cus_meta)
+        else:
+            ctimer.maintk(db_file, hide=args.hide, debug=args.debug, silence=args.silence)
 
 if __name__ == "__main__":
     sys.exit(main())
+

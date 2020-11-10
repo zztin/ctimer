@@ -21,7 +21,7 @@ def safe_closing_data_entry(db_file, current_clock_details):
         db.db_add_clock_details(db_file, current_clock_details)
 
 
-def maintk(db_file, hide=False, debug=False, silence=False):
+def maintk(db_file, hide=False, debug=False, silence=False, meta=None):
     root = tk.Tk()
 
     def on_closing():
@@ -38,7 +38,8 @@ def maintk(db_file, hide=False, debug=False, silence=False):
                      clock_details=current_clock_details,
                      debug=debug,
                      hide=hide,
-                     silence=silence).pack()
+                     silence=silence,
+                     meta=meta).pack()
     root.mainloop()
     return 0
 
@@ -50,18 +51,21 @@ def time_print(time):
 
 
 class ConcentrateTimer(tk.Frame):
-    def __init__(self, master=None, db_file=None, clock_details=None, debug=False, hide=False, silence=False):
+    def __init__(self, master=None, db_file=None, clock_details=None, debug=False, hide=False, silence=False, meta=None):
         super().__init__(master)
         self.db_file = db_file
         self.master = master
         self.hide = hide
         self.silence = silence
+        self.meta = meta
         master.title("Concentration Timer")
         self.test_volume(debug=debug)
         if debug:
             self.data = Meta(set_time=5, break_time=5, long_break_time=7, long_break_clock_count=2)
-        else:
+        elif self.meta is None:
             self.data = Meta()
+        else:
+            self.data = self.meta
         self.clock_ticking = False
         self.is_break = False
         self.set_time = self.data.set_time
@@ -308,5 +312,4 @@ class Meta():
             self.long_break_clock_count = 2
         else:
             self.long_break_clock_count = int(round(long_break_clock_count))
-
 
