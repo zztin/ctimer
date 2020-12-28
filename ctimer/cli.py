@@ -27,7 +27,7 @@ def yesno(question):
     ans = input(prompt).strip().lower()
     if ans not in ["y","n"]:
         print("please type y or n.")
-        return yestno(question)
+        return yesno(question)
     if ans == "y":
         return True
     return False
