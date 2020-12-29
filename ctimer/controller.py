@@ -37,6 +37,7 @@ class CtimerClockController:
                 self.tm.clock_ticking = False
                 # is a ctimer clock
                 if not self.tm.is_break:
+                    self.tm.is_break = True
                     self.tv.configure_display("Done!", self.tm.is_break)
                     self.tm.clock_details.clock_count += 1
                     self.tm.clock_details.end_clock = time.time()
@@ -45,7 +46,6 @@ class CtimerClockController:
                     self.tm.clock_details.end_break = self.tm.clock_details.end_clock
                     # check break length
                     self.tv.voice_message("done")
-                    self.tm.is_break = True
                     if self.tm.hide:
                         self.tv.bring_to_front()
                     self.tm.reached_bool, self.tm.reason = self.tv.ask_reached_goal_reason()
@@ -59,6 +59,7 @@ class CtimerClockController:
 
                 # is counting break
                 else:
+                    self.tm.is_break = False
                     # break is over. Record break-over time.
                     if self.tm.hide:
                         self.tv.bring_to_front()
@@ -69,7 +70,6 @@ class CtimerClockController:
                     self.tm.clock_details.end_break = time.time()
                     # TODO: Bug fix --This is reached before reason is filled. check line 134
                     db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
-                    self.tm.is_break = False
                     self.tm.remaining_time = self.tm.set_time
                     self.tv.configure_display("Break is over!", self.tm.is_break)
                     self.tv.show_start_button()
