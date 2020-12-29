@@ -3,6 +3,7 @@
 """Tests for `ctimer` package."""
 
 import pytest
+from ctimer.model import Meta
 
 from ctimer import ctimer
 import datetime
@@ -19,7 +20,7 @@ def mock_midnight(mocker):
 
 @pytest.fixture
 def metadata_class():
-    return ctimer.Meta
+    return Meta
 
 
 def test_metadata_default(metadata_class):

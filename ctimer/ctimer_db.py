@@ -6,6 +6,7 @@ from collections import namedtuple
 from dataclasses import dataclass
 from dataclasses import astuple
 import pandas as pd
+import time
 
 @dataclass(init=True, repr=True)
 class Clock_details:
@@ -19,6 +20,19 @@ class Clock_details:
     reached_bool: bool = False
     reason: str = "N.A."
 
+
+def safe_closing_data_entry(db_file, current_clock_details):
+    if current_clock_details.start_clock == 0:
+        pass
+    elif current_clock_details.end_break != 0:
+        pass
+    else:
+        if current_clock_details.end_clock == 0:
+            current_clock_details.end_clock = time.time()
+            current_clock_details.end_break = current_clock_details.end_clock
+        elif current_clock_details.end_break == 0:
+            current_clock_details.end_break = time.time()
+        db_add_clock_details(db_file, current_clock_details)
 
 def get_yearly_stats(db_file):
     conn = create_connection(db_file)

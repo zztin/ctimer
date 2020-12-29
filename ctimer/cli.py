@@ -132,6 +132,7 @@ def main():
         else:
             ctimer.maintk(db_file, hide=args.hide, debug=args.debug, silence=args.silence)
 
+
 if __name__ == "__main__":
     sys.exit(main())
 
