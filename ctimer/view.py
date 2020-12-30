@@ -215,9 +215,3 @@ class CtimerClockView(tk.Frame):
     def flash_window(self, flashing_seconds=5):
         # check flashing_button.py
         pass
-
-
-def time_print(timepoint):
-    mins, secs = divmod(timepoint, 60)
-    print_time = "{:02d}:{:02d}".format(mins, secs)
-    return print_time
