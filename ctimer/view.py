@@ -181,6 +181,7 @@ class CtimerClockView(tk.Frame):
     def start_pause(self):
         # is paused: start clock
         if not self.tm.clock_ticking:
+            # if starting a fresh new clock, ask for goals. If not, pass
             if self.tm.remaining_time == self.tm.set_time:
                 self.voice_message("start")
                 self.tm.clock_details_sanity_check()
@@ -189,20 +190,17 @@ class CtimerClockView(tk.Frame):
                 self.tm.clock_details.start_clock = time.time()
                 self.get_goal()
             self.tm.clock_details.start_clock = time.time()
-            self._button_start_pause["text"] = "Pause"
-            self._button_start_pause["fg"] = "Red"
+            self.show_pause_button()
             self.tm.clock_ticking = True
         # is ticking: pause clock
         else:
             self.voice_message("pause")
-            self._button_start_pause["text"] = "Start"
-            self._button_start_pause["fg"] = "Green"
+            self.show_start_button()
             self.tm.clock_ticking = False
 
     # premature terminate clock
     def terminate(self):
-        self._button_start_pause["text"] = "Start"
-        self._button_start_pause["fg"] = "Green"
+        self.show_start_button()
         self.tm.is_break = False
         self.tm.clock_ticking = False
         db.safe_closing_data_entry(self.tm.db_file, self.tm.clock_details)
