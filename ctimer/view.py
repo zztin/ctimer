@@ -5,7 +5,7 @@ import time
 from tkinter import simpledialog
 from tkinter import messagebox as mbox
 import ctimer.ctimer_db as db
-
+import ctimer.utils as utils
 
 class CtimerClockView(tk.Frame):
     def __init__(self, timer_model, master):
@@ -85,7 +85,7 @@ class CtimerClockView(tk.Frame):
         self.pack()
 
     def show_time(self, time_text, total_clock_counts):
-        self._label_display.config(text=time_print(time_text))
+        self._label_display.config(text=utils.time_print(time_text))
         self._label_total_clock_counts.config(
             text=f"Total clocks: {total_clock_counts}"
         )
