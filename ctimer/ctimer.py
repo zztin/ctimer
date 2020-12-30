@@ -16,21 +16,11 @@ def maintk(db_file, hide=False, debug=False, silence=False, meta=None):
     if hide is False:
         root.attributes("-topmost", True)
     current_clock_details = db.Clock_details()
-    ccc = cc.CtimerClockController(db_file,
-                                   current_clock_details,
-                                   hide,
-                                   debug,
-                                   silence,
-                                   meta,
-                                   root)
+    ccc = cc.CtimerClockController(
+        db_file, current_clock_details, hide, debug, silence, meta, root
+    )
 
     ccc.countdown()
 
     root.mainloop()
     return 0
-
-
-
-
-
-

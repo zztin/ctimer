@@ -8,6 +8,7 @@ from dataclasses import astuple
 import pandas as pd
 import time
 
+
 @dataclass(init=True, repr=True)
 class Clock_details:
     date: str = ""
@@ -34,18 +35,20 @@ def safe_closing_data_entry(db_file, current_clock_details):
             current_clock_details.end_break = time.time()
         db_add_clock_details(db_file, current_clock_details)
 
+
 def get_yearly_stats(db_file):
     conn = create_connection(db_file)
     df = pd.read_sql_query("SELECT * FROM clock_details", conn)
 
     # new feature while including all clocks (also halted clocks)
     # df[df['clock_done'] == True]['clock_start']
-    start_series_raw = df['start_clock']
+    start_series_raw = df["start_clock"]
     start_series = [datetime.fromtimestamp(int(float(x))) for x in start_series_raw]
     events = pd.DataFrame(index=start_series, columns=["count"])
-    events['count'] = 1
-    events = events['count']
+    events["count"] = 1
+    events = events["count"]
     return events
+
 
 def get_clock_count(db_file):
     # create a database connection
@@ -53,14 +56,16 @@ def get_clock_count(db_file):
     c = conn.cursor()
     # Create table
     try:
-        last_row = c.execute('''SELECT * FROM clock_details ORDER BY id DESC LIMIT 1;''').fetchall()[-1]
+        last_row = c.execute(
+            """SELECT * FROM clock_details ORDER BY id DESC LIMIT 1;"""
+        ).fetchall()[-1]
         if last_row[1] == f"{date.today()}":
             clock_count = last_row[2]
         else:
             clock_count = 0
     except Exception as e:
         # if the db is empty: error --list index out of range
-        #print("Exception ctimer_db.py:49", e, ". Clock_count set to 0. Exception handled, keep running.")
+        # print("Exception ctimer_db.py:49", e, ". Clock_count set to 0. Exception handled, keep running.")
         clock_count = 0
     return clock_count
 
@@ -75,13 +80,13 @@ def db_add_clock_details(db_file, clock_instance):
 
 
 def create_table(db_file):
-    """ create a table from nothing
-    """
+    """create a table from nothing"""
     try:
         conn = sqlite3.connect(db_file)
         c = conn.cursor()
         # Create table
-        c.execute('''CREATE TABLE IF NOT EXISTS clock_details
+        c.execute(
+            """CREATE TABLE IF NOT EXISTS clock_details
                      (id integer PRIMARY KEY,
                      date text,
                      clock_count integer,
@@ -91,16 +96,16 @@ def create_table(db_file):
                      task_title text,
                      task_description text,
                      reached_bool text,
-                     reason text )''')
+                     reason text )"""
+        )
         conn.commit()
         conn.close()
     except Error as e:
         print(e)
 
 
-
 def create_connection(db_file):
-    """ create a database connection to the SQLite database
+    """create a database connection to the SQLite database
         specified by db_file
     :param db_file: database file
     :return: Connection object or None
@@ -123,9 +128,9 @@ def create_clock_details(conn, entry):
     :return: clock id
     """
     # Insert a row of data
-    sql = '''INSERT INTO clock_details(date, clock_count, start_clock, end_clock, end_break, task_title, 
-    task_description, reached_bool, reason) VALUES (?,?,?,?,?,?,?,?,?)'''
-    #TODO: add pause interval
+    sql = """INSERT INTO clock_details(date, clock_count, start_clock, end_clock, end_break, task_title, 
+    task_description, reached_bool, reason) VALUES (?,?,?,?,?,?,?,?,?)"""
+    # TODO: add pause interval
     cur = conn.cursor()
     cur.execute(sql, entry)
     return cur.lastrowid
@@ -142,5 +147,3 @@ def create_connection_new(db_file):
     finally:
         if conn:
             conn.close()
-
-

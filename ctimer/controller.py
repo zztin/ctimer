@@ -9,7 +9,9 @@ class CtimerClockController:
     def __init__(self, db_file, clock_details, hide, debug, silence, meta, master=None):
 
         self.master = master
-        self.tm = cm.CtimerClockModel(db_file, clock_details, debug, hide, silence, meta)
+        self.tm = cm.CtimerClockModel(
+            db_file, clock_details, debug, hide, silence, meta
+        )
         self.tv = cv.CtimerClockView(self.tm, master)
 
     def countdown(self):
@@ -30,8 +32,9 @@ class CtimerClockController:
             # counting down
             if self.tm.remaining_time > 0:
                 self.tm.remaining_time -= 1
-                self.tv.show_time(self.tm.remaining_time,
-                                  self.tm.clock_details.clock_count)
+                self.tv.show_time(
+                    self.tm.remaining_time, self.tm.clock_details.clock_count
+                )
             # finish counting. clock stops.
             else:
                 self.tm.clock_ticking = False
@@ -48,8 +51,15 @@ class CtimerClockController:
                     self.tv.voice_message("done")
                     if self.tm.hide:
                         self.tv.bring_to_front()
-                    self.tm.reached_bool, self.tm.reason = self.tv.ask_reached_goal_reason()
-                    if self.tm.clock_details.clock_count % self.tm.long_break_clock_count == 0:
+                    (
+                        self.tm.reached_bool,
+                        self.tm.reason,
+                    ) = self.tv.ask_reached_goal_reason()
+                    if (
+                        self.tm.clock_details.clock_count
+                        % self.tm.long_break_clock_count
+                        == 0
+                    ):
                         self.tm.remaining_time = self.tm.set_long_break_time
                         self.tv.voice_message("enjoy_long")
                     else:
