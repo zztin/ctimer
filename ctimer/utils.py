@@ -50,10 +50,12 @@ def create_cache_folder():
         os.makedirs(cache_path)
     return cache_path
 
-def get_cache_filepath(arg_db, debug=False):
+def get_cache_filepath(arg_db, debug=False, mock_test=False):
     cache_path = create_cache_folder()
     if debug:
         filename = "db_debug_path.txt"
+    elif mocktest:
+        filename = "db_mock_path.txt"
     else:
         filename = "db_path.txt"
     # read cache
