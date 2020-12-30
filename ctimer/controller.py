@@ -81,7 +81,7 @@ class CtimerClockController:
                     # TODO: Bug fix --This is reached before reason is filled. check line 134
                     db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
                     self.tm.remaining_time = self.tm.set_time
-                    self.tv.configure_display("Break is over!", self.tm.is_break)
+                    self.tv.configure_display("Click start!", self.tm.is_break)
                     self.tv.show_start_button()
                     self.tm.clock_ticking = False
 

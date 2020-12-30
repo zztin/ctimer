@@ -69,7 +69,7 @@ class CtimerClockView(tk.Frame):
         self.master.attributes("-topmost", 0)
 
     def create_widgets(self):
-        self._label_display.config(text="Click start!")
+        self.configure_display("Click start!", self.tm.is_break)
         # self._label_display.config(text=self.set_time_print)
         self._label_date.config(text=self.tm.clock_details.date)
         self._label_total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
@@ -203,14 +203,13 @@ class CtimerClockView(tk.Frame):
     def terminate(self):
         self._button_start_pause["text"] = "Start"
         self._button_start_pause["fg"] = "Green"
-        self._label_display["fg"] = "Black"
         self.tm.is_break = False
         self.tm.clock_ticking = False
         db.safe_closing_data_entry(self.tm.db_file, self.tm.clock_details)
         self.tm.remaining_time = self.tm.set_time
         # # this clock is shorter than 25 mins
         # self.clock_details.end_clock = time.time()
-        self._label_display.config(text="Click start!")
+        self.configure_display("Click start!", self.tm.is_break)
         self.voice_message("stop")
 
     def flash_window(self, flashing_seconds=5):
