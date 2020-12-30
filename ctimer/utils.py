@@ -54,7 +54,7 @@ def get_cache_filepath(arg_db, debug=False, mock_test=False):
     cache_path = create_cache_folder()
     if debug:
         filename = "db_debug_path.txt"
-    elif mocktest:
+    elif mock_test:
         filename = "db_mock_path.txt"
     else:
         filename = "db_path.txt"
