@@ -1,7 +1,7 @@
 from datetime import date
 import tkinter as tk
 import ctimer.ctimer_db as db
-
+from ctimer import utils
 
 class CtimerClockModel:
     def __init__(
@@ -30,7 +30,7 @@ class CtimerClockModel:
         self.clock_ticking = False
         self.is_break = False
         self.set_time = self.data.set_time
-        self.set_time_print = time_print(self.set_time)
+        self.set_time_print = utils.time_print(self.set_time)
         self.set_break_time = self.data.break_time
         self.set_long_break_time = self.data.long_break_time
         self.remaining_time = self.set_time
@@ -84,7 +84,3 @@ class Meta:
             self.long_break_clock_count = int(round(long_break_clock_count))
 
 
-def time_print(time):
-    mins, secs = divmod(time, 60)
-    print_time = "{:02d}:{:02d}".format(mins, secs)
-    return print_time

@@ -4,15 +4,19 @@
 
 import pytest
 from ctimer.model import Meta
-
 from ctimer import ctimer
 import datetime
 from datetime import date, time
+from pathlib import Path
 
 
 def mock_midnight(mocker):
     mocker.patch("date.today", return_value=date(2019, 9, 8))
     mocker.patch("time.time", datetime.combine(date(2019, 9, 8)), time(23, 59, 55))
+    home = str(Path.home())
+    cache_path = os.path.join(home, ".ctimer/")
+
+
     db_file = f"../data/ctimer_pytest_mock.db"
     ctimer.maintk(db_file, hide=False, debug=True, silence=False)
 
