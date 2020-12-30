@@ -9,15 +9,41 @@ from ctimer import utils
 import datetime
 from datetime import date, time
 from pathlib import Path
+from unittest.mock import patch
 
 
 def mock_midnight(mocker):
+    """
+    Unfinished. Mock a situation where a clock is started before midnight and ended on the second day.
+    Expected behavior: While this clock finishes/before next clock starts,
+    1. The date changed to a new date.
+    2. The clock count = 0.
+    3. DB entries date: according to the start time of the clock.
+    Mock a situation:
+    A. While starting:
+    date=date(2019, 9, 8)
+    clock_count = 0
+    start_clock = datetime.combine(date(2019, 9, 8), time(23, 59, 55))
+    end_clock = datetime.combine(date(2019, 9, 8), time(0, 24, 55))
+    B. After finished 1st clock:
+    date=date(2019, 9, 9)
+    clock_count = 0
+    start_clock = datetime.combine(date(2019, 9, 8), time(0, 40, 55))
+    end_clock = datetime.combine(date(2019, 9, 8), time(1, 05, 55))
+    """
+    mock_time = datetime.combine(date(2019, 9, 8), time(23, 59, 55))
+    mock_db_path = utils.get_cache_filepath(arg_db=False, debug=False, mock_test=True)
     mocker.patch("date.today", return_value=date(2019, 9, 8))
-    mocker.patch("time.time", datetime.combine(date(2019, 9, 8)), time(23, 59, 55))
-    mocker.patch("db_path", utils.get_cache_filepath(arg_db=False, debug=False, mock_test=True))
+    mocker.patch("time.time", return_value=mock_time)
+    mocker.patch("db_path", return_value=mock_db_path)
     mocker.patch("ONE_SECOND", 1) # substitute 1000 with 1
+    # how to send "start key" to program
+    # how to send close tkinter window + yes
+    # check db entries
+    expected_clock_count = 0
     ctimer.maintk(db_file, hide=False, debug=True, silence=False)
-
+    # actual_clock_count
+    #assert expected_clock_count == actual
 
 
 @pytest.fixture
