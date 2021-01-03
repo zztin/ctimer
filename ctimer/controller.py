@@ -50,9 +50,9 @@ class CtimerClockController:
                     # the app has been force ended during the clock. Update the break time while termination.
                     self.tm.clock_details.end_break = self.tm.clock_details.end_clock
                     # check break length
-                    self.tv.voice_message("done")
+                    self.tv.playback_voice_message("done")
                     if self.tm.hide:
-                        self.tv.bring_to_front()
+                        self.tv.set_bring_to_front()
                     (
                         self.tm.reached_bool,
                         self.tm.reason,
@@ -63,10 +63,10 @@ class CtimerClockController:
                         == 0
                     ):
                         self.tm.remaining_time = self.tm.set_long_break_time
-                        self.tv.voice_message("enjoy_long")
+                        self.tv.playback_voice_message("enjoy_long")
                     else:
                         self.tm.remaining_time = self.tm.set_break_time
-                        self.tv.voice_message("enjoy")
+                        self.tv.playback_voice_message("enjoy")
                     self.tm.clock_ticking = True
 
                 # is counting break
@@ -74,11 +74,11 @@ class CtimerClockController:
                     self.tm.is_break = False
                     # break is over. Record break-over time.
                     if self.tm.hide:
-                        self.tv.bring_to_front()
-                        self.tv.not_bring_to_front()
+                        self.tv.set_bring_to_front()
+                        self.tv.set_not_bring_to_front()
                     if self.tm.silence:
                         self.tv.flash_window()
-                    self.tv.voice_message("break_over")
+                    self.tv.playback_voice_message("break_over")
                     self.tm.clock_details.end_break = time.time()
                     # TODO: Bug fix --This is reached before reason is filled. check line 134
                     db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
