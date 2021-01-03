@@ -1,12 +1,5 @@
-from ctimer import ctimer
 import ctimer.ctimer as ct
-import tkinter as tk
-import ctimer.ctimer_db as db
-import sys
 import os
-import argparse
-from ctimer.visual import show_stats as ss
-from tkinter import messagebox
 import logging
 from pathlib import Path
 

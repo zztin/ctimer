@@ -1,10 +1,12 @@
 from datetime import date
-import tkinter as tk
 import ctimer.ctimer_db as db
 from ctimer import utils
 
 
 class CtimerClockModel:
+    """
+    Ctimer data model
+    """
     def __init__(
         self,
         db_file=None,
@@ -14,12 +16,20 @@ class CtimerClockModel:
         silence=False,
         meta=None,
     ):
+        #############################
+        # none-clock flags/attributes
+        #############################
+        # cli flags/attributes
         self.debug = debug
         self.db_file = db_file
+        # GUI window flags/attributes
+        self.title = "Ctimer"
         self.hide = hide
         self.silence = silence
+        ########################
+        # clock flags/attributes
+        ########################
         self.meta = meta
-        self.title = "Ctimer"
         if debug:
             self.data = Meta(
                 set_time=5, break_time=5, long_break_time=7, long_break_clock_count=2
@@ -28,6 +38,7 @@ class CtimerClockModel:
             self.data = Meta()
         else:
             self.data = self.meta
+
         self.clock_ticking = False
         self.is_break = False
         self.set_time = self.data.set_time

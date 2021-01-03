@@ -8,7 +8,109 @@ import ctimer.ctimer_db as db
 import ctimer.utils as utils
 
 
-class CtimerClockView(tk.Frame):
+class CtimerClockViewBase:
+    def set_bring_to_front(self):
+        """
+        Abstract method of setting bring_to_front flag
+        """
+        raise NotImplementedError
+
+    def set_not_bring_to_front(self):
+        """
+        Abstract method of setting not_bring_to_front flag
+        """
+        raise NotImplementedError
+
+    def create_widgets(self):
+        """
+        Abstract method of creating widgest of GUI window
+        """
+        raise NotImplementedError
+
+    def show_time(self, time_text: str, total_clock_counts: str) -> None:
+        """
+        Abstract method of showing time_text and total_clock_counts with labels
+
+        :param time_text: the time text you want to show
+        :param total_clock_counts: the total clock counts you want to show
+        """
+        raise NotImplementedError
+
+    def show_pause_button(self):
+        """
+        Abstract method to render the pause button
+
+        :return: None
+        """
+        raise NotImplementedError
+
+    def show_start_button(self):
+        """
+        Abstract method to render the start button
+        :return: None
+        """
+        raise NotImplementedError
+
+    def configure_display(self, text, is_break):
+        """
+        Configure the count down timer display
+
+        :param text: text we want to display
+        :param is_break: if the counting status is in the break slot
+        :return: None
+        """
+        raise NotImplementedError
+
+    def ask_reached_goal_reason(self):
+        """
+        Ask users about the reason if they reached their goals
+
+        Ask users via GUI, return a tuple (boolean yes/no, reason in string text)
+        :return: tuple
+        """
+        raise NotImplementedError
+
+    def playback_voice_message(self, message_type):
+        """
+        Playback voice message according to message types
+
+        By default the message is played by the say tool
+
+        :param message_type: message type in string
+        :return: None
+        """
+        raise NotImplementedError
+
+    def toggle_start_pause(self):
+        """
+        Toggle between start and pauce status of the clock
+
+        :return: None
+        """
+        raise NotImplementedError
+
+    def terminate(self):
+        """
+        Prematurely terminate clocks
+
+        Apply the corresponding when terminate clocks permaturely. This method is uaully used by interrupting a
+        ticking clock.
+
+        :return: None
+        """
+        raise NotImplementedError
+
+    def flash_window(self, flashing_seconds=5):
+        """
+        Falsh the window
+
+        :param flashing_seconds: how long the window will be flashing
+        :return:
+        """
+        raise NotImplementedError
+
+
+class CtimerClockView(tk.Frame, CtimerClockViewBase):
     def __init__(self, timer_model, master):
         super().__init__(master)
 
@@ -27,7 +129,7 @@ class CtimerClockView(tk.Frame):
                 fg="Green",
                 width=8,
                 height=4,
-                command=self.start_pause,
+                command=self.toggle_start_pause,
             ),
             tk.Button(
                 self,
@@ -44,9 +146,9 @@ class CtimerClockView(tk.Frame):
         self.tm = timer_model
         master.title(self.tm.title)
         if self.tm.debug:
-            self.voice_message("Welcome_debug")
+            self.playback_voice_message("Welcome_debug")
         else:
-            self.voice_message("Welcome")
+            self.playback_voice_message("Welcome")
         self.data = self.tm.data
 
         self._button_start_pause = buttons[0]
@@ -63,10 +165,10 @@ class CtimerClockView(tk.Frame):
             text=f"Done: {self.tm.clock_details.clock_count}"
         )
 
-    def bring_to_front(self):
+    def set_bring_to_front(self):
         self.master.attributes("-topmost", 1)
 
-    def not_bring_to_front(self):
+    def set_not_bring_to_front(self):
         self.master.attributes("-topmost", 0)
 
     def create_widgets(self):
@@ -101,9 +203,6 @@ class CtimerClockView(tk.Frame):
         self._label_display["fg"] = "Black"
 
     def configure_display(self, text, is_break):
-        """
-        configure the count down timer display
-        """
         self._label_display.config(text=text)
         if is_break:
             self._label_display["fg"] = "Green"
@@ -136,7 +235,7 @@ class CtimerClockView(tk.Frame):
             )
         return reached_bool, reason
 
-    def voice_message(self, message_type):
+    def playback_voice_message(self, message_type):
         message = ""
         if not self.tm.silence:
             if message_type == "done":
@@ -179,12 +278,12 @@ class CtimerClockView(tk.Frame):
             command = shlex.split(f"say {message}")
             subprocess.run(command)
 
-    def start_pause(self):
+    def toggle_start_pause(self):
         # is paused: start clock
         if not self.tm.clock_ticking:
             # if starting a fresh new clock, ask for goals. If not, pass
             if self.tm.remaining_time == self.tm.set_time:
-                self.voice_message("start")
+                self.playback_voice_message("start")
                 self.tm.clock_details_sanity_check()
                 self._label_date.config(text=self.tm.clock_details.date)
                 self.tm.get_new_clock_entry()
@@ -195,11 +294,10 @@ class CtimerClockView(tk.Frame):
             self.tm.clock_ticking = True
         # is ticking: pause clock
         else:
-            self.voice_message("pause")
+            self.playback_voice_message("pause")
             self.show_start_button()
             self.tm.clock_ticking = False
 
-    # premature terminate clock
     def terminate(self):
         self.show_start_button()
         self.tm.is_break = False
@@ -209,7 +307,7 @@ class CtimerClockView(tk.Frame):
         # # this clock is shorter than 25 mins
         # self.clock_details.end_clock = time.time()
         self.configure_display("Click start!", self.tm.is_break)
-        self.voice_message("stop")
+        self.playback_voice_message("stop")
 
     def flash_window(self, flashing_seconds=5):
         # check flashing_button.py
