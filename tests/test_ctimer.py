@@ -14,10 +14,11 @@ from pathlib import Path
 def mock_midnight(mocker):
     mocker.patch("date.today", return_value=date(2019, 9, 8))
     mocker.patch("time.time", datetime.combine(date(2019, 9, 8)), time(23, 59, 55))
-    mocker.patch("db_path", utils.get_cache_filepath(arg_db=False, debug=False, mock_test=True))
-    mocker.patch("ONE_SECOND", 1) # substitute 1000 with 1
+    mocker.patch(
+        "db_path", utils.get_cache_filepath(arg_db=False, debug=False, mock_test=True)
+    )
+    mocker.patch("ONE_SECOND", 1)  # substitute 1000 with 1
     ctimer.maintk(db_file, hide=False, debug=True, silence=False)
-
 
 
 @pytest.fixture
