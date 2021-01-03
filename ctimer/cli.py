@@ -61,6 +61,7 @@ def main():
     else:
         db_file = f"{db_path}/ctimer.db"
         db.create_connection(db_file)  # create if not exist
+
     if args.overall:
         events = db.get_yearly_stats(db_file)
         ss.plot_calmap(events=events)

@@ -1,5 +1,4 @@
 from datetime import date
-import tkinter as tk
 import ctimer.ctimer_db as db
 from ctimer import utils
 
