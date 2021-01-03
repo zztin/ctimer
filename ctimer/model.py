@@ -3,6 +3,7 @@ import tkinter as tk
 import ctimer.ctimer_db as db
 from ctimer import utils
 
+
 class CtimerClockModel:
     def __init__(
         self,
@@ -82,5 +83,3 @@ class Meta:
             self.long_break_clock_count = 2
         else:
             self.long_break_clock_count = int(round(long_break_clock_count))
-
-

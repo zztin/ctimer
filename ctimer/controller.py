@@ -5,6 +5,8 @@ import ctimer.model as cm
 import ctimer.ctimer_db as db
 
 ONE_SECOND = 1000
+
+
 class CtimerClockController:
     def __init__(self, db_file, clock_details, hide, debug, silence, meta, master=None):
 

@@ -24,6 +24,7 @@ def yesno(question):
         return True
     return False
 
+
 def ask_customized():
     set_time = input(f"Desired length of clock? (min, default=25): ")
     break_time = input(f"Desired length of normal breaks? (min, default=5): ")
@@ -40,6 +41,7 @@ def ask_customized():
         aim_clock_count=int(aim_clock_count),
     )
 
+
 def create_cache_folder():
     # store database path information in users' home folder.
     home = str(Path.home())
@@ -49,6 +51,7 @@ def create_cache_folder():
     else:
         os.makedirs(cache_path)
     return cache_path
+
 
 def get_cache_filepath(arg_db, debug=False, mock_test=False):
     cache_path = create_cache_folder()
@@ -94,6 +97,7 @@ def get_cache_filepath(arg_db, debug=False, mock_test=False):
             db_path_file.write(new_path)
         return new_path
 
+
 def dir_path(rdir_path):
     root_path = str(Path.home())
     full_path = os.path.join(root_path, rdir_path)
@@ -109,8 +113,8 @@ def dir_path(rdir_path):
     else:
         raise NotADirectoryError(full_path)
 
+
 def time_print(time):
     mins, secs = divmod(time, 60)
     print_time = "{:02d}:{:02d}".format(mins, secs)
     return print_time
-

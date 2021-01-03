@@ -7,6 +7,7 @@ from tkinter import messagebox as mbox
 import ctimer.ctimer_db as db
 import ctimer.utils as utils
 
+
 class CtimerClockView(tk.Frame):
     def __init__(self, timer_model, master):
         super().__init__(master)
