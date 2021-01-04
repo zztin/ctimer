@@ -1,4 +1,4 @@
-import ctimer.ctimer as ct
+import ctimer.model as cm
 import os
 import logging
 from pathlib import Path
@@ -26,7 +26,7 @@ def ask_customized():
         f"Every N break you want to have a long break? (N, default=4): "
     )
     aim_clock_count = input("How many clocks are you aiming today? (N, default=8): ")
-    return ct.Meta(
+    return cm.Meta(
         set_time=int(set_time) * 60,
         break_time=int(break_time) * 60,
         long_break_time=int(long_break_time) * 60,
