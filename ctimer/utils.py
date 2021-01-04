@@ -19,13 +19,13 @@ def yesno(question):
 
 
 def ask_customized():
-    set_time = input(f"Desired length of clock? (min, default=25): ")
-    break_time = input(f"Desired length of normal breaks? (min, default=5): ")
-    long_break_time = input(f"Desired length of long break? (min, default=15): ")
+    set_time = input(f"Desired length of clock? (min, default=25): ") or "25"
+    break_time = input(f"Desired length of normal breaks? (min, default=5): ") or "5"
+    long_break_time = input(f"Desired length of long break? (min, default=15): ") or "15"
     long_break_clock_count = input(
         f"Every N break you want to have a long break? (N, default=4): "
-    )
-    aim_clock_count = input("How many clocks are you aiming today? (N, default=8): ")
+    ) or "4"
+    aim_clock_count = input("How many clocks are you aiming today? (N, default=8): ") or "8"
     return cm.Meta(
         set_time=int(set_time) * 60,
         break_time=int(break_time) * 60,
