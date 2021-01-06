@@ -1,14 +1,12 @@
-#!/usr/bin/env python
+"""Tests for `model` module of `ctimer` package."""
 
-"""Tests for `ctimer` package."""
 
 import pytest
+import datetime
 from ctimer.model import Meta
 from ctimer import ctimer
 from ctimer import utils
-import datetime
 from datetime import date, time
-from pathlib import Path
 
 
 def mock_midnight(mocker):
