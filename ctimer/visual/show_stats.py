@@ -3,11 +3,14 @@ from datetime import datetime, date, time, timedelta
 from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure, output_file, show
 import numpy as np
-
+import webbrowser
 np.random.seed(sum(map(ord, "calmap")))
 import pandas as pd
 import calmap
 import matplotlib.pyplot as plt
+pd.set_option('colheader_justify', 'center')
+from shutil import copyfile
+import os
 
 # For testing plot_calmap
 def _get_random_events():
@@ -42,9 +45,11 @@ def plot_calmap(events=_get_random_events()):
 # plot weekly ctimer stats with bokeh
 def _get_plotting_df(df, week_para=None, day_count=7, subset_logic=None):
     """
-    week_para: supply week number, default: this week. TODO: to be implemented.
+    week_para: supply week number, default: this week.
     df: whole sqlite table. Including breaks and focus-time
-    TODO: goal: plot (1) is_complete clocks (color Green) (2) clocks with pauses (color yellowgreen) (3) breaks (color blue)
+    TODO: plot (1) is_complete clocks (color Green)
+               (2) clocks with pauses (color yellowgreen)
+               (3) breaks (color blue)
     currently only plotting the (1) and (2) in same color.
     """
     if week_para is None:
@@ -105,6 +110,56 @@ def _get_plotting_df(df, week_para=None, day_count=7, subset_logic=None):
         }
         return data, weekdays
 
+def quick_view_clocks(path, outpath="/tmp/"):
+    conn = sqlite3.connect(path)
+    df = pd.read_sql_query("SELECT * FROM clock_details", conn)
+    conn.close()
+    # print clock times
+    df_clocks = df[df["is_break"] == "0"].copy()
+    df_clocks['Start'] = df_clocks['start_clock'].apply(lambda x:datetime.fromtimestamp(int(float(x))).time())
+    df_clocks['End'] = df_clocks['end_clock'].apply(lambda x:datetime.fromtimestamp(int(float(x))).time())
+    df_clocks_copy = df_clocks[
+        ["date",
+         "clock_count",
+         "Start",
+         "End",
+         "is_complete",
+         "task_description",
+         "reached_bool",
+         "reason",
+         ]
+    ]
+    html_string = '''
+    <html>
+      <head><title>HTML Pandas Dataframe with CSS</title></head>
+      <link rel="stylesheet" type="text/css" href="df_style.css"/>
+      <body>
+        {table}
+      </body>
+    </html>.
+    '''
+    css_path = f"{outpath}/ctimer_css_beautify_{date.today()}.html"
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    print(dir_path)
+    copyfile(f"{dir_path}/df_style.css", f"{outpath}/df_style.css")
+    with open(css_path, 'w') as f:
+        f.write(html_string.format(table=df_clocks_copy.to_html(classes='mystyle')))
+        webbrowser.open(f"file://{css_path}")
+
+
+def simple_html_df(df_clocks, outpath):
+    final_path = f"{outpath}/ctimer_readable_{date.today()}.html"
+    df_clocks.to_html(final_path, columns=["date",
+                                           "clock_count",
+                                           "Start",
+                                           "End",
+                                           "is_complete",
+                                           "task_description",
+                                           "reached_bool",
+                                           "reason",
+                                           ])
+    webbrowser.open(f"file://{final_path}")
+
 
 def plot_timetable(path, outpath):
     conn = sqlite3.connect(path)
@@ -161,7 +216,7 @@ def plot_timetable(path, outpath):
         bottom=data["bottom"],
         left=data["left"],
         right=data["right"],
-        color="#B3DE69",
+        color="#8ed7e6",
     )
 
     # Complaints reference fields not match up top, bottom, left, right.

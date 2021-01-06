@@ -62,6 +62,7 @@ def main():
         ss.plot_calmap(events=events)
     elif args.stats:
         ss.plot_timetable(path=db_file, outpath="/tmp/")
+        ss.quick_view_clocks(path=db_file, outpath="/tmp/")
     else:
         if args.cus:
             cus_meta = utils.ask_customized()
