@@ -140,11 +140,10 @@ def quick_view_clocks(path, outpath="/tmp/"):
     '''
     css_path = f"{outpath}/ctimer_css_beautify_{date.today()}.html"
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    print(dir_path)
     copyfile(f"{dir_path}/df_style.css", f"{outpath}/df_style.css")
     with open(css_path, 'w') as f:
         f.write(html_string.format(table=df_clocks_copy.to_html(classes='mystyle')))
-        webbrowser.open(f"file://{css_path}")
+    webbrowser.open(f"file://{css_path}")
 
 
 def simple_html_df(df_clocks, outpath):
