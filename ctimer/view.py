@@ -110,6 +110,94 @@ class CtimerClockViewBase:
         raise NotImplementedError
 
 
+class CtimerClockFakeView(CtimerClockViewBase):
+    def __init__(self, timer_model, master):
+        self.tm = timer_model
+        # master won't be used in a fake view as it is a part of GUI framework
+        self.master = master
+
+    def _show_gui_window_response(self, msg):
+        print(f"GUI window response: {msg}")
+
+    def _show_gui_start_pause_button(self, msg):
+        self._show_gui_window_response(f"start pause button: {msg}")
+
+    @staticmethod
+    def _get_fake_goal():
+        return "fake goal description"
+
+    def set_bring_to_front(self):
+        self._show_gui_window_response("is set as 'always on the top'.")
+
+    def set_not_bring_to_front(self):
+        self._show_gui_window_response("is disabled 'always on the top'.")
+
+    def create_widgets(self):
+        self._show_gui_window_response("widgets are created and arranged by the layout.")
+
+    def show_time(self, time_text, total_clock_counts):
+        self._show_gui_window_response(f"time_text: {time_text}")
+        self._show_gui_window_response(f"total_clock_counts: {total_clock_counts}")
+
+    def show_pause_button(self):
+        self._show_gui_start_pause_button("text: pause, fg: red")
+
+    def show_start_button(self):
+        self._show_gui_start_pause_button("text: start, fg: green")
+        self._show_gui_window_response("fg: black")
+
+    def configure_display(self, text, is_break):
+        self._show_gui_window_response(text=text)
+        if is_break:
+            self._show_gui_window_response("fg: green")
+        else:
+            self._show_gui_window_response("fg: black")
+
+    def get_goal(self):
+        self.tm.clock_details.task_description = self._get_fake_goal()
+        self._show_gui_window_response(f"text: Goal: {self.tm.clock_details.task_description}")
+
+    def ask_reached_goal_reason(self):
+        return True, "fake reached goal reasons"
+
+    def playback_voice_message(self, message_type):
+        self._show_gui_window_response(f"Voice: {message_type}")
+
+    def toggle_start_pause(self):
+        # is paused: start clock
+        if not self.tm.clock_ticking:
+            # if starting a fresh new clock, ask for goals. If not, pass
+            if self.tm.remaining_time == self.tm.set_time:
+                self.playback_voice_message("start")
+                self.tm.clock_details_sanity_check()
+                self._show_gui_window_response(self.tm.clock_details.date)
+                self.tm.get_new_clock_entry()
+                self.tm.clock_details.start_clock = time.time()
+                self.get_goal()
+            self.tm.clock_details.start_clock = time.time()
+            self.show_pause_button()
+            self.tm.clock_ticking = True
+        # is ticking: pause clock
+        else:
+            self.playback_voice_message("pause")
+            self.show_start_button()
+            self.tm.clock_ticking = False
+
+    def terminate(self):
+        self.show_start_button()
+        self.tm.is_break = False
+        self.tm.clock_ticking = False
+        db.safe_closing_data_entry(self.tm.db_file, self.tm.clock_details)
+        self.tm.remaining_time = self.tm.set_time
+        # # this clock is shorter than 25 mins
+        # self.clock_details.end_clock = time.time()
+        self.configure_display("Click start!", self.tm.is_break)
+        self.playback_voice_message("stop")
+
+    def flash_window(self, flashing_seconds=5):
+        pass
+
+
 class CtimerClockView(tk.Frame, CtimerClockViewBase):
     def __init__(self, timer_model, master):
         super().__init__(master)
