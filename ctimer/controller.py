@@ -42,22 +42,19 @@ class CtimerClockController:
             else:
                 self.tm.clock_ticking = False
                 # is a ctimer clock
-                if not self.tm.is_break:
-                    self.tm.is_break = True
-                    self.tv.configure_display("Done!", self.tm.is_break)
+                if not self.tm.clock_details.is_break:
+                    self.tv.configure_display("Done!", self.tm.clock_details.is_break)
                     self.tm.clock_details.clock_count += 1
                     self.tm.clock_details.end_clock = time.time()
                     # if end_break == end_clock :
                     # the app has been force ended during the clock. Update the break time while termination.
-                    self.tm.clock_details.end_break = self.tm.clock_details.end_clock
                     # check break length
                     self.tv.playback_voice_message("done")
                     if self.tm.hide:
                         self.tv.set_bring_to_front()
-                    (
-                        self.tm.reached_bool,
-                        self.tm.reason,
-                    ) = self.tv.ask_reached_goal_reason()
+                    self.tm.clock_details.reached_bool, self.tm.clock_details.reason = self.tv.ask_reached_goal_reason()
+                    self.tm.check_complete()
+                    db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
                     if (
                         self.tm.clock_details.clock_count
                         % self.tm.long_break_clock_count
@@ -69,10 +66,10 @@ class CtimerClockController:
                         self.tm.remaining_time = self.tm.set_break_time
                         self.tv.playback_voice_message("enjoy")
                     self.tm.clock_ticking = True
+                    self.tm.clock_details.is_break = True
 
                 # is counting break
                 else:
-                    self.tm.is_break = False
                     # break is over. Record break-over time.
                     if self.tm.hide:
                         self.tv.set_bring_to_front()
@@ -81,12 +78,13 @@ class CtimerClockController:
                         self.tv.flash_window()
                     self.tv.playback_voice_message("break_over")
                     self.tm.fresh_new = True
-                    self.tm.clock_details.end_break = time.time()
-                    # TODO: Bug fix --This is reached before reason is filled. check line 134
+                    self.tm.clock_details.end_clock = time.time()
+                    self.tm.check_complete()
                     db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
                     self.tm.remaining_time = self.tm.set_time
-                    self.tv.configure_display("Click start!", self.tm.is_break)
+                    self.tv.configure_display("Click start!", self.tm.clock_details.is_break)
                     self.tv.show_start_button()
                     self.tm.clock_ticking = False
+                    self.tm.clock_details.is_break = False
 
         self.master.after(ONE_SECOND, self.countdown)

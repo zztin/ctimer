@@ -220,7 +220,7 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         self.master.attributes("-topmost", 0)
 
     def create_widgets(self):
-        self.configure_display("Click start!", self.tm.is_break)
+        self.configure_display("Click start!", self.tm.clock_details.is_break)
         # self._label_display.config(text=self.set_time_print)
         self._label_date.config(text=self.tm.clock_details.date)
         self._label_total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
@@ -332,11 +332,10 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         # is paused: start clock
         if not self.tm.clock_ticking:
             # if starting a fresh new clock, ask for goals. If not, pass
-            if self.tm.fresh_new and not self.tm.is_break:
+            self.tm.clock_details.get_new_clock_entry()
+            if self.tm.fresh_new and not self.tm.clock_details.is_break:
                 self.playback_voice_message("start")
-                self.tm.clock_details_sanity_check()
                 self.config_label_date(text=self.tm.clock_details.date)
-                self.tm.get_new_clock_entry()
                 self.tm.clock_details.start_clock = time.time()
                 self.get_goal()
                 self.tm.fresh_new = False
@@ -348,19 +347,30 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         # is ticking: pause clock
         else:
             self.playback_voice_message("pause")
+            # expect to be false unless within 1 sec.
+            self.tm.check_complete()
+            # self.tm.clock_details.is_complete = False
+            self.tm.clock_details.end_clock = time.time()
+            self.tm.clock_details.reached_bool, self.tm.clock_details.reason = 0, 0
+            db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
             self.show_start_button()
             self.tm.clock_ticking = False
 
     def terminate(self):
         self.show_start_button()
-        self.tm.is_break = False
+        if not self.tm.clock_details.is_break:
+            self.tm.clock_details.reached_bool, self.tm.clock_details.reason = self.ask_reached_goal_reason()
+        self.tm.clock_details.is_break = False
         self.tm.clock_ticking = False
-        db.safe_closing_data_entry(self.tm.db_file, self.tm.clock_details)
+        # expect check_complete would give is_complete == False
+        # self.tm.clock_details.is_complete = False
+        self.tm.check_complete()
+        self.tm.clock_details.end_clock = time.time()
+        db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
         self.tm.remaining_time = self.tm.set_time
         self.tm.fresh_new = True
         # # this clock is shorter than 25 mins
-        # self.clock_details.end_clock = time.time()
-        self.configure_display("Click start!", self.tm.is_break)
+        self.configure_display("Click start!", self.tm.clock_details.is_break)
         self.playback_voice_message("stop")
 
     def flash_window(self, flashing_seconds=5):

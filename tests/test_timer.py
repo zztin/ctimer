@@ -10,7 +10,7 @@ from ctimer.view import CtimerClockFakeView
 @pytest.fixture
 def fake_timer():
     db_path_debug = utils.get_cache_filepath(None, debug=True)
-    db_file_debug = f"{db_path_debug}/ctimer_debug.db"
+    db_file_debug = f"{db_path_debug}/ctimer_debug_2021.db"
     db.create_connection(db_file_debug)
     current_clock_details= db.Clock_details()
 

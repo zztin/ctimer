@@ -15,25 +15,56 @@ class Clock_details:
     clock_count: int = 0
     start_clock: float = 0
     end_clock: float = 0
-    end_break: float = 0
+    is_break: bool = "Not Updated" # True during breaks
+    is_complete: bool = "Not Updated" # only True when there's no pause (when end_clock - start_clock is set_time)
     task_title: str = "Task title TO BE IMPLEMENT"
     task_description: str = "Task description to be set"
-    reached_bool: bool = False
+    reached_bool: bool = "Not Updated"
     reason: str = "N.A."
+
+    def get_new_clock_entry(self):
+        self.clock_details_sanity_check()
+        self.start_clock = 0
+        self.end_clock = 0
+        self.is_break = False
+        self.is_complete = "Not Updated"
+        self.task_title = "Task title TO BE IMPLEMENT"
+        self.task_description = "Task description to be set"
+        self.reached_bool = "Not Updated"
+        self.reason = "N.A."
+
+    def clock_details_sanity_check(self):
+        if self.date != f"{date.today()}":
+            self.date = f"{date.today()}"
+            self.clock_count = get_clock_count(self.db_file)
 
 
 def safe_closing_data_entry(db_file, current_clock_details):
+    clock_duration = current_clock_details.end_clock - current_clock_details.start_clock
     if current_clock_details.start_clock == 0:
-        pass
-    elif current_clock_details.end_break != 0:
         pass
     else:
         if current_clock_details.end_clock == 0:
             current_clock_details.end_clock = time.time()
-            current_clock_details.end_break = current_clock_details.end_clock
-        elif current_clock_details.end_break == 0:
-            current_clock_details.end_break = time.time()
-        db_add_clock_details(db_file, current_clock_details)
+        current_clock_details.is_complete = False
+        _db_add_clock_details(db_file, current_clock_details)
+
+
+def db_add_clock_details(db_file, clock_instance):
+    """
+    TODO: Merge safe_closing and other checks
+    """
+    _db_add_clock_details(db_file, clock_instance)
+
+
+def _db_add_clock_details(db_file, clock_instance):
+
+    # create a database connection
+    conn = create_connection(db_file)
+    with conn:
+        clock_id = create_clock_details(conn, astuple(clock_instance))
+    conn.close()
+    return clock_id
 
 
 def get_yearly_stats(db_file):
@@ -69,16 +100,6 @@ def get_clock_count(db_file):
         clock_count = 0
     return clock_count
 
-
-def db_add_clock_details(db_file, clock_instance):
-    # create a database connection
-    conn = create_connection(db_file)
-    with conn:
-        clock_id = create_clock_details(conn, astuple(clock_instance))
-    conn.close()
-    return clock_id
-
-
 def create_table(db_file):
     """create a table from nothing"""
     try:
@@ -92,7 +113,8 @@ def create_table(db_file):
                      clock_count integer,
                      start_clock text,
                      end_clock text,
-                     end_break text,
+                     is_break text,
+                     is_complete text,
                      task_title text,
                      task_description text,
                      reached_bool text,
@@ -128,8 +150,8 @@ def create_clock_details(conn, entry):
     :return: clock id
     """
     # Insert a row of data
-    sql = """INSERT INTO clock_details(date, clock_count, start_clock, end_clock, end_break, task_title, 
-    task_description, reached_bool, reason) VALUES (?,?,?,?,?,?,?,?,?)"""
+    sql = """INSERT INTO clock_details(date, clock_count, start_clock, end_clock, is_break, is_complete, task_title, 
+    task_description, reached_bool, reason) VALUES (?,?,?,?,?,?,?,?,?,?)"""
     # TODO: add pause interval
     cur = conn.cursor()
     cur.execute(sql, entry)

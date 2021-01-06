@@ -51,17 +51,17 @@ def main():
     logging.info(f"{db_path} is where the db stored in.")
 
     if args.debug:
-        db_file = f"{db_path}/ctimer_debug.db"
+        db_file = f"{db_path}/ctimer_debug_2021.db"
         db.create_connection(db_file)  # create if not exist
     else:
-        db_file = f"{db_path}/ctimer.db"
+        db_file = f"{db_path}/ctimer_2021.db"
         db.create_connection(db_file)  # create if not exist
 
     if args.overall:
         events = db.get_yearly_stats(db_file)
         ss.plot_calmap(events=events)
     elif args.stats:
-        ss.plot_timetable(path=db_file, outpath=f"./")
+        ss.plot_timetable(path=db_file, outpath="/tmp/")
     else:
         if args.cus:
             cus_meta = utils.ask_customized()

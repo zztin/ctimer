@@ -43,7 +43,6 @@ class CtimerClockModel:
             self.data = self.meta
 
         self.clock_ticking = False
-        self.is_break = False
         self.fresh_new = True
         self.set_time = self.data.set_time
         self.set_time_print = utils.time_print(self.set_time)
@@ -57,21 +56,22 @@ class CtimerClockModel:
         self.clock_details.clock_count = db.get_clock_count(self.db_file)
         self.goal = None
 
-    def get_new_clock_entry(self):
-        # start, end clock time =0
-        self.clock_details.start_clock = 0
-        self.clock_details.end_clock = 0
-        self.clock_details.end_break = 0
-        self.clock_details.task_title = "Task title TO BE IMPLEMENT"
-        self.clock_details.task_description = "Task description to be set"
-        self.clock_details.reached_bool = False
-        self.clock_details.reason = "N.A."
-
-    def clock_details_sanity_check(self):
-        if self.clock_details.date != f"{date.today()}":
-            self.clock_details.date = f"{date.today()}"
-            self.clock_details.clock_count = db.get_clock_count(self.db_file)
-
+    def check_complete(self):
+        """
+        Two scenario is consider completed.
+        1. Clock duration is reached.
+        2. Clock duration is not reached, but Goal is reached. (happens when clocks is pre-terminated when task is finished.)
+        """
+        clock_duration = self.clock_details.end_clock - self.clock_details.start_clock
+        if self.clock_details.is_break is True:
+            self.clock_details.is_complete = False
+        elif abs(clock_duration - self.set_time) <= 0.01:
+            self.clock_details.is_complete = True
+        elif self.clock_details.reached_bool:
+            self.clock_details.is_complete = True
+        else:
+            self.clock_details.is_complete = False
+            self.clock_details.reached_bool, self.clock_details.reason = 0, 0
 
 class Meta:
     def __init__(
