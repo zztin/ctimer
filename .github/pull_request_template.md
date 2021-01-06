@@ -15,7 +15,7 @@
 
 ## Checklist:
 - [ ] Add test cases to all the changes you introduce
-- [ ] Run `poetry run pytest` locally to ensure all linter checks pass
+- [ ] Run `pytest` locally
 - [ ] Update the documentation if necessary
 
 ## Steps to Test This Pull Request
