@@ -40,10 +40,12 @@ def plot_calmap(events=_get_random_events()):
 
 
 # plot weekly ctimer stats with bokeh
-def _get_plotting_df(df, week_para=None, day_count=7):
+def _get_plotting_df(df, week_para=None, day_count=7, subset_logic=None):
     """
     week_para: supply week number, default: this week. TODO: to be implemented.
-
+    df: whole sqlite table. Including breaks and focus-time
+    TODO: goal: plot (1) is_complete clocks (color Green) (2) clocks with pauses (color yellowgreen) (3) breaks (color blue)
+    currently only plotting the (1) and (2) in same color.
     """
     if week_para is None:
         dates_axis = dates = [
@@ -60,6 +62,8 @@ def _get_plotting_df(df, week_para=None, day_count=7):
 
         for i, a_date in enumerate(dates_axis):
             weekdays.append(a_date.weekday())
+#            subset_logic = (["is_break"] == 0)
+            df = df[df["is_break"] == "0"]
             df_on_date = df[df["date"] == f"{a_date}"]
             # print(df_on_date.shape[0])
             date_beginning = datetime.combine(a_date, time(8, 0, 0))  # start from 8am
