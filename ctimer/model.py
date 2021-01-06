@@ -23,7 +23,10 @@ class CtimerClockModel:
         self.debug = debug
         self.db_file = db_file
         # GUI window flags/attributes
-        self.title = "Ctimer"
+        if debug:
+            self.title = "Debug mode"
+        else:
+            self.title = "Ctimer"
         self.hide = hide
         self.silence = silence
         ########################
@@ -41,6 +44,7 @@ class CtimerClockModel:
 
         self.clock_ticking = False
         self.is_break = False
+        self.fresh_new = True
         self.set_time = self.data.set_time
         self.set_time_print = utils.time_print(self.set_time)
         self.set_break_time = self.data.break_time

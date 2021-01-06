@@ -30,6 +30,7 @@ class CtimerClockController:
         """
         # clock is running (either focus time or break)
         if self.tm.clock_ticking:
+            self.tm.fresh_new = False
             self.tv.show_pause_button()
             # counting down
             if self.tm.remaining_time > 0:
@@ -79,6 +80,7 @@ class CtimerClockController:
                     if self.tm.silence:
                         self.tv.flash_window()
                     self.tv.playback_voice_message("break_over")
+                    self.tm.fresh_new = True
                     self.tm.clock_details.end_break = time.time()
                     # TODO: Bug fix --This is reached before reason is filled. check line 134
                     db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)

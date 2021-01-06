@@ -261,6 +261,8 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
             elif message_type == "start":
                 # TODO: if starting a new clock, new message: ready? set your goal
                 message = "ready? Start."
+            elif message_type == "continue":
+                message = "continue"
             elif message_type == "pause":
                 message = "Pause"
             elif message_type == "stop":
@@ -282,13 +284,16 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         # is paused: start clock
         if not self.tm.clock_ticking:
             # if starting a fresh new clock, ask for goals. If not, pass
-            if self.tm.remaining_time == self.tm.set_time:
+            if self.tm.fresh_new and not self.tm.is_break:
                 self.playback_voice_message("start")
                 self.tm.clock_details_sanity_check()
                 self._label_date.config(text=self.tm.clock_details.date)
                 self.tm.get_new_clock_entry()
                 self.tm.clock_details.start_clock = time.time()
                 self.get_goal()
+                self.tm.fresh_new = False
+            else:
+                self.playback_voice_message("continue")
             self.tm.clock_details.start_clock = time.time()
             self.show_pause_button()
             self.tm.clock_ticking = True
@@ -304,6 +309,7 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         self.tm.clock_ticking = False
         db.safe_closing_data_entry(self.tm.db_file, self.tm.clock_details)
         self.tm.remaining_time = self.tm.set_time
+        self.tm.fresh_new = True
         # # this clock is shorter than 25 mins
         # self.clock_details.end_clock = time.time()
         self.configure_display("Click start!", self.tm.is_break)
