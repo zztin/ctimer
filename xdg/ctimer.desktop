@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Application
+Exec=ctimer
+Icon=ctimer
+StartupNotify=true
+Terminal=false
+Categories=Utility;
+Name=Ctimer - Concentration Timer
+Comment=Record concentration clock number
+X-Ayatana-Desktop-Shortcuts=X-WeeklyCalendar;X-CalendarReport;
+
+[X-WeeklyCalendar Shortcut Group]
+Name=Show Weekly Calendar Activities
+Exec=ctimer --stats
+TargetEnvironment=Unity
+
+[X-CalendarReport Shortcut Group]
+Name=Show Yearly Calendar Activities
+Exec=ctimer --overall
+TargetEnvironment=Unity
+
+
