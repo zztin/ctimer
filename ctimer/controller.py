@@ -1,8 +1,8 @@
 import time
 import ctimer.view as cv
 import ctimer.model as cm
-
 import ctimer.ctimer_db as db
+import ctimer.utils as utils
 
 ONE_SECOND = 1000
 
@@ -35,17 +35,15 @@ class CtimerClockController:
             # counting down
             if self.tm.remaining_time > 0:
                 self.tm.remaining_time -= 1
-                self.tv.show_time(
-                    self.tm.remaining_time, self.tm.clock_details.clock_count
-                )
+                self.tv.countdown_display(utils.time_print(self.tm.remaining_time), self.tm.clock_details.is_break)
             # finish counting. clock stops.
             else:
                 self.tm.clock_ticking = False
                 # is a ctimer clock
                 if not self.tm.clock_details.is_break:
-                    self.tv.configure_display("Done!", self.tm.clock_details.is_break)
-                    self.tm.clock_details.clock_count += 1
                     self.tm.clock_details.end_clock = time.time()
+                    self.tm.check_complete()
+                    self.tv.countdown_display("Done!", self.tm.clock_details.is_break)
                     # if end_break == end_clock :
                     # the app has been force ended during the clock. Update the break time while termination.
                     # check break length
@@ -53,7 +51,7 @@ class CtimerClockController:
                     if self.tm.hide:
                         self.tv.set_bring_to_front()
                     self.tm.clock_details.reached_bool, self.tm.clock_details.reason = self.tv.ask_reached_goal_reason()
-                    self.tm.check_complete()
+
                     db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
                     if (
                         self.tm.clock_details.clock_count
@@ -77,12 +75,13 @@ class CtimerClockController:
                     if self.tm.silence:
                         self.tv.flash_window()
                     self.tv.playback_voice_message("break_over")
-                    self.tm.fresh_new = True
                     self.tm.clock_details.end_clock = time.time()
                     self.tm.check_complete()
                     db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
+                    self.tm.clock_details.get_new_clock_entry()
                     self.tm.remaining_time = self.tm.set_time
-                    self.tv.configure_display("Click start!", self.tm.clock_details.is_break)
+                    self.tm.fresh_new = True
+                    self.tv.countdown_display("Click start!", self.tm.clock_details.is_break)
                     self.tv.show_start_button()
                     self.tm.clock_ticking = False
                     self.tm.clock_details.is_break = False

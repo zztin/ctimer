@@ -15,22 +15,25 @@ class Clock_details:
     clock_count: int = 0
     start_clock: float = 0
     end_clock: float = 0
-    is_break: bool = "Not Updated" # True during breaks
-    is_complete: bool = "Not Updated" # only True when there's no pause (when end_clock - start_clock is set_time)
+    is_break: bool = False # True during breaks
+    is_complete: bool = False # only True when there's no pause (when end_clock - start_clock is set_time)
     task_title: str = "Task title TO BE IMPLEMENT"
     task_description: str = "Task description to be set"
-    reached_bool: bool = "Not Updated"
+    reached_bool: bool = False
     reason: str = "N.A."
+
+    def __init__(self, db_file):
+        self.db_file = db_file
 
     def get_new_clock_entry(self):
         self.clock_details_sanity_check()
         self.start_clock = 0
         self.end_clock = 0
         self.is_break = False
-        self.is_complete = "Not Updated"
+        self.is_complete = False
         self.task_title = "Task title TO BE IMPLEMENT"
         self.task_description = "Task description to be set"
-        self.reached_bool = "Not Updated"
+        self.reached_bool = False
         self.reason = "N.A."
 
     def clock_details_sanity_check(self):

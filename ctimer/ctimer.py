@@ -15,7 +15,7 @@ def maintk(db_file, hide=False, debug=False, silence=False, meta=None):
     root.protocol("WM_DELETE_WINDOW", on_closing)
     if hide is False:
         root.attributes("-topmost", True)
-    current_clock_details = db.Clock_details()
+    current_clock_details = db.Clock_details(db_file)
     ccc = cc.CtimerClockController(
         db_file, current_clock_details, hide, debug, silence, meta, root
     )
