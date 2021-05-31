@@ -71,11 +71,14 @@ def test_fake_timer_terminate(fake_timer):
     3. is_break == False
     """
     assert not fake_timer.tm.clock_ticking
+    assert fake_timer._button_start_pause == "Start"
 
     fake_timer.toggle_start_pause()
+    assert fake_timer._button_start_pause == "Pause"
     assert fake_timer.tm.clock_ticking
     assert not fake_timer.tm.clock_details.is_break
 
     fake_timer.terminate()
     assert not fake_timer.tm.clock_ticking
     assert not fake_timer.tm.clock_details.is_break
+    assert fake_timer._button_start_pause == "Start"

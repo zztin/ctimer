@@ -358,26 +358,23 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
             self.tm.clock_ticking = False
 
     def terminate(self):
-        if self.tm.fresh_new:
-            self.playback_voice_message("stop")
-        else:
-            self.show_start_button()
-            if not self.tm.clock_details.is_break:
-                self.tm.clock_details.reached_bool, self.tm.clock_details.reason = self.ask_reached_goal_reason()
-            # check terminate status
-            self.tm.check_complete()
-            # expect check_complete would give is_complete == False
-            # self.tm.clock_details.is_complete = False
-            self.tm.clock_details.end_clock = time.time()
-            db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
-            # set to new status
-            self.tm.clock_details.is_break = False
-            self.tm.clock_ticking = False
-            self.tm.clock_details.get_new_clock_entry()
-            self.tm.remaining_time = self.tm.set_time
-            self.playback_voice_message("stop")
-            self.tm.fresh_new = True
-            self.countdown_display("Click start!", self.tm.clock_details.is_break)
+        self.playback_voice_message("stop")
+        if not self.tm.clock_details.is_break and not self.tm.fresh_new:
+            self.tm.clock_details.reached_bool, self.tm.clock_details.reason = self.ask_reached_goal_reason()
+        # check terminate status
+        self.tm.check_complete()
+        # expect check_complete would give is_complete == False
+        # self.tm.clock_details.is_complete = False
+        self.tm.clock_details.end_clock = time.time()
+        db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
+        # set to new status
+        self.tm.clock_details.is_break = False
+        self.tm.clock_ticking = False
+        self.tm.clock_details.get_new_clock_entry()
+        self.tm.remaining_time = self.tm.set_time
+        self.tm.fresh_new = True
+        self.countdown_display("Click start!", self.tm.clock_details.is_break)
+        self.show_start_button()
 
 
     def flash_window(self, flashing_seconds=5):
@@ -395,8 +392,8 @@ class CtimerClockFakeView(CtimerClockView):
         self._label_total_clock_aim = None
         self._label_total_clock_counts = None
         self._label_display = None
-        self._button_start_pause = None
-        self._button_stop = None
+        self._button_start_pause = "Start"
+        self._button_stop = "Stop"
         self._label_goal_show = None
 
     def config_label_date(self, text="NA"):
@@ -429,13 +426,17 @@ class CtimerClockFakeView(CtimerClockView):
 
     def show_clock_count(self, time_text, total_clock_counts):
         self._show_gui_window_response(f"total_clock_counts: {total_clock_counts}")
+        self._label_total_clock_counts = total_clock_counts
 
     def show_pause_button(self):
         self._show_gui_start_pause_button("text: pause, fg: red")
+        self._button_start_pause = "Pause"
 
     def show_start_button(self):
         self._show_gui_start_pause_button("text: start, fg: green")
+        self._button_start_pause = "Start"
         self._show_gui_window_response("fg: black")
+
 
     def countdown_display(self, text, is_break):
         if is_break:
@@ -443,11 +444,12 @@ class CtimerClockFakeView(CtimerClockView):
         else:
             self._show_gui_window_response("fg: black")
         self._show_gui_window_response(text)
+        self._label_display = text
 
     def get_goal(self):
         self.tm.clock_details.task_description = self._get_fake_goal()
         self._show_gui_window_response(f"text: Goal: {self.tm.clock_details.task_description}")
-
+        self._label_goal_show = self.tm.clock_details.task_description
     def ask_reached_goal_reason(self):
         return True, "fake reached goal reasons"
 
