@@ -17,7 +17,7 @@ def controller():
     db_path_debug = utils.get_cache_filepath(None, debug=True)
     db_file_debug = f"{db_path_debug}/ctimer_debug_2021.db"
     db.create_connection(db_file_debug)
-    current_clock_details = db.Clock_details()
+    current_clock_details = db.Clock_details(db_file_debug)
 
     tk_root = tk.Tk()
     tk_root.wait_visibility()
@@ -39,7 +39,7 @@ def test_init(controller):
     assert type(tv) is CtimerClockView
     assert type(tm) is CtimerClockModel
 
-    assert tm.clock_details.reached_bool == "Not Updated"
+    assert tm.clock_details.reached_bool == False
     assert tm.clock_details.reason == "N.A."
 
 
