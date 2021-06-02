@@ -43,6 +43,7 @@ class CtimerClockController:
                 if not self.tm.clock_details.is_break:
                     self.tm.clock_details.end_clock = time.time()
                     self.tm.check_complete()
+                    self.tm.clock_details.clock_count += 1
                     self.tv.countdown_display("Done!", self.tm.clock_details.is_break)
                     # if end_break == end_clock :
                     # the app has been force ended during the clock. Update the break time while termination.
@@ -76,7 +77,6 @@ class CtimerClockController:
                         self.tv.flash_window()
                     self.tv.playback_voice_message("break_over")
                     self.tm.clock_details.end_clock = time.time()
-                    self.tm.check_complete()
                     db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
                     self.tm.clock_details.get_new_clock_entry()
                     self.tm.remaining_time = self.tm.set_time

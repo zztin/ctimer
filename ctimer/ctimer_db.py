@@ -35,6 +35,7 @@ class Clock_details:
         self.task_description = "Task description to be set"
         self.reached_bool = False
         self.reason = "N.A."
+        self.pause_toggled = False
 
     def clock_details_sanity_check(self):
         if self.date != f"{date.today()}":

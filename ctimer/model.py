@@ -59,30 +59,15 @@ class CtimerClockModel:
 
     def check_complete(self):
         """
-        Two scenario is consider completed.
-        1. Clock duration is reached.
-        2. Clock duration is not reached, but Goal is reached. (happens when clocks is pre-terminated when task is finished.)
-        ## TODO: rewrite this function and change definition. If terminate: check ... , If end: check... using
-        ## absolute timestamp duration is not working during interactive debug mode.
-        ### USE CHECK_COMPLETE to add clock count.
+        Definition of complete: no pause during the clock. If terminate the clock earlier, it could still be a
+        complete clock.
         """
-        clock_duration = self.clock_details.end_clock - self.clock_details.start_clock
-        # if check_complete is asked during a break / when a break is finished, always return false.
-        if self.clock_details.is_break is True:
-            # if a clock did not continue for the full period straight (has pauses in between)
+        if self.clock_details.pause_toggled:
             self.clock_details.is_complete = False
-        # a clock has finished (within 0.01 s) automatically
-        elif abs(clock_duration - self.set_time) <= 1:
-            self.clock_details.is_complete = True
-            self.clock_details.clock_count += 1
-        # a clock has been termianted when the user finishes the task but the time still has remaining.
-        elif self.clock_details.reached_bool:
-            self.clock_details.is_complete = True
-            self.clock_details.clock_count += 1
-        # terminate a clock when the user is distracted. Clock count += 0
         else:
-            self.clock_details.is_complete = False
-            self.clock_details.reached_bool, self.clock_details.reason = False, 0
+            self.clock_details.is_complete = True
+
+
 
 class Meta:
     def __init__(

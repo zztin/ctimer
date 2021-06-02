@@ -335,6 +335,7 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
 
     def toggle_start_pause(self):
         # is paused: start clock
+        self.tm.clock_details.pause_toggled = True
         if not self.tm.clock_ticking:
             if self.tm.fresh_new:
                 self.playback_voice_message("start")
@@ -363,8 +364,8 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
             self.tm.clock_details.reached_bool, self.tm.clock_details.reason = self.ask_reached_goal_reason()
         # check terminate status
         self.tm.check_complete()
-        # expect check_complete would give is_complete == False
-        # self.tm.clock_details.is_complete = False
+        if self.tm.clock_details.is_complete:
+            self.clock_details.clock_count += 1
         self.tm.clock_details.end_clock = time.time()
         db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
         # set to new status
