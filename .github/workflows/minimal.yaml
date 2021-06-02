@@ -16,6 +16,11 @@ jobs:
         with:
           python-version: 3.7
 
+      - name: Dependency (ubuntu)
+        run: |
+          # for GUI widget testing
+          sudo apt-get install xvfb -y
+
       - name: Dependency (pip)
         run: |
           # testing tools & visualization packages
@@ -34,4 +39,10 @@ jobs:
 
       - name: PyTest Cases
         run: |
+          # used for tkinter widget test cases
+          # otherwise tkinter will complain when running on github action
+          # "_tkinter.TclError: no display name and no $DISPLAY environment variable"
+          Xvfb :99 &
+          export DISPLAY=:99
+
           inv test
