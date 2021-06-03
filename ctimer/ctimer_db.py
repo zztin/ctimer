@@ -21,6 +21,7 @@ class Clock_details:
     task_description: str = "Task description to be set"
     reached_bool: bool = False
     reason: str = "N.A."
+    pause_toggled = False
 
     def __init__(self, db_file):
         self.db_file = db_file

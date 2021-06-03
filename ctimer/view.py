@@ -335,7 +335,6 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
 
     def toggle_start_pause(self):
         # is paused: start clock
-        self.tm.clock_details.pause_toggled = True
         if not self.tm.clock_ticking:
             if self.tm.fresh_new:
                 self.playback_voice_message("start")
@@ -352,6 +351,7 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         # is ticking: pause clock
         else:
             self.playback_voice_message("pause")
+            self.tm.clock_details.pause_toggled = True
             self.tm.clock_details.end_clock = time.time()
             self.tm.clock_details.reached_bool, self.tm.clock_details.reason = False, 0
             db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
@@ -362,10 +362,13 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         self.playback_voice_message("stop")
         if not self.tm.clock_details.is_break and not self.tm.fresh_new:
             self.tm.clock_details.reached_bool, self.tm.clock_details.reason = self.ask_reached_goal_reason()
-        # check terminate status
-        self.tm.check_complete()
-        if self.tm.clock_details.is_complete:
-            self.clock_details.clock_count += 1
+            if self.tm.clock_details.reached_bool:
+                self.clock_details.clock_count += 1
+                self.tv.countdown_display("Done!", self.tm.clock_details.is_break)
+                self.tv.show_clock_count(self.tm.clock_details.clock_count)
+                # only if goal is reached, clock count is +1, we want to ask if it is a complete (no break) clock
+                self.tm.check_complete()
+        # Write to clock details even if it is terminated. (goal not reached)
         self.tm.clock_details.end_clock = time.time()
         db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
         # set to new status
