@@ -72,7 +72,6 @@ class CtimerClockViewBase:
         """
         Abstract method of showing time_text and total_clock_counts with labels
 
-        :param time_text: the time text you want to show
         :param total_clock_counts: the total clock counts you want to show
         """
         raise NotImplementedError
@@ -363,9 +362,9 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         if not self.tm.clock_details.is_break and not self.tm.fresh_new:
             self.tm.clock_details.reached_bool, self.tm.clock_details.reason = self.ask_reached_goal_reason()
             if self.tm.clock_details.reached_bool:
-                self.clock_details.clock_count += 1
-                self.tv.countdown_display("Done!", self.tm.clock_details.is_break)
-                self.tv.show_clock_count(self.tm.clock_details.clock_count)
+                self.tm.clock_details.clock_count += 1
+                self.countdown_display("Done!", self.tm.clock_details.is_break)
+                self.show_clock_count(self.tm.clock_details.clock_count)
                 # only if goal is reached, clock count is +1, we want to ask if it is a complete (no break) clock
                 self.tm.check_complete()
         # Write to clock details even if it is terminated. (goal not reached)
@@ -428,7 +427,7 @@ class CtimerClockFakeView(CtimerClockView):
         self._show_gui_window_response("Widgets are created and arranged by the layout.")
 
 
-    def show_clock_count(self, time_text, total_clock_counts):
+    def show_clock_count(self, total_clock_counts):
         self._show_gui_window_response(f"total_clock_counts: {total_clock_counts}")
         self._label_total_clock_counts = total_clock_counts
 
