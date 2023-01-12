@@ -160,6 +160,7 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
             tk.Label(self, height=1, width=10, textvariable=""),
             tk.Label(self, height=1, width=10, textvariable=""),
             tk.Label(self, height=3, width=10, font=("Arial", 30), textvariable=""),
+            tk.Label(self, height=1, width=25, textvariable=""),
         ]
 
         buttons = [
@@ -199,9 +200,13 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         self._label_total_clock_aim = labels[2]
         self._label_date = labels[3]
         self._label_display = labels[4]
+        self._label_latest_pomodoro_completed_timestamp = labels[5]
         self.create_widgets()
         self._label_total_clock_counts.config(
             text=f"Done: {self.tm.clock_details.clock_count}"
+        )
+        self._label_latest_pomodoro_completed_timestamp.config(
+            text=f"Completed at: unknown yet"
         )
 
     def get_button_start_pause(self):
@@ -222,6 +227,7 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         self._label_date.config(text=self.tm.clock_details.date)
         self._label_total_clock_aim.config(text=f"Aim: {self.data.aim_clock_count}")
         self._label_total_clock_counts.config(text=f"Done: ...Loading...")
+        self._label_latest_pomodoro_completed_timestamp.config(text=f"Latest Pomodoro Completed Timestamp")
         self._label_date.grid(row=0, column=0, columnspan=2)
         self._label_total_clock_aim.grid(row=1, column=0, columnspan=2)
         self._label_total_clock_counts.grid(row=2, column=0, columnspan=2)
@@ -229,12 +235,18 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
         self._button_start_pause.grid(row=5, column=0)
         self._button_stop.grid(row=5, column=1)
         self._label_goal_show.grid(row=6, column=0, columnspan=2)
+        self._label_latest_pomodoro_completed_timestamp.grid(row=7, column=0, columnspan=2)
 
         self.pack()
 
     def show_clock_count(self, total_clock_counts):
         self._label_total_clock_counts.config(
             text=f"Total clocks: {total_clock_counts}"
+        )
+
+    def show_latest_pomodoro_completed_timestamp(self, latest_pomodoro_completed_timestamp):
+        self._label_latest_pomodoro_completed_timestamp.config(
+            text=f"Completed at: {latest_pomodoro_completed_timestamp}"
         )
 
     def show_pause_button(self):
@@ -368,7 +380,8 @@ class CtimerClockView(tk.Frame, CtimerClockViewBase):
                 # only if goal is reached, clock count is +1, we want to ask if it is a complete (no break) clock
                 self.tm.check_complete()
         # Write to clock details even if it is terminated. (goal not reached)
-        self.tm.clock_details.end_clock = time.time()
+        timestamp = time.time()
+        self.tm.clock_details.end_clock = timestamp
         db.db_add_clock_details(self.tm.db_file, self.tm.clock_details)
         # set to new status
         self.tm.clock_details.is_break = False

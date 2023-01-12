@@ -1,4 +1,5 @@
 import time
+import datetime
 import ctimer.view as cv
 import ctimer.model as cm
 import ctimer.ctimer_db as db
@@ -41,11 +42,14 @@ class CtimerClockController:
                 self.tm.clock_ticking = False
                 # is a ctimer clock
                 if not self.tm.clock_details.is_break:
-                    self.tm.clock_details.end_clock = time.time()
+                    timestamp = time.time()
+                    self.tm.clock_details.end_clock = timestamp
                     self.tm.check_complete()
                     self.tm.clock_details.clock_count += 1
                     self.tv.countdown_display("Done!", self.tm.clock_details.is_break)
                     self.tv.show_clock_count(self.tm.clock_details.clock_count)
+                    self.tv.show_latest_pomodoro_completed_timestamp(
+                        datetime.datetime.fromtimestamp(timestamp).strftime("%H:%M:%S"))
                     # TODO: if end_break == end_clock :
                     # the app has been force ended during the clock. Update the break time while termination.
                     # check break length
