@@ -22,6 +22,11 @@ Contributions are welcome!
 6. Optional: try `ctimer --help` for several launching options
 7. Wondering how your work proficiency is over the past period? try `ctimer --overall`
 
+## Development
+
+1. use the option `--debug` when developing to get shorter clock intervals.
+2. test with `pytest` under project root folder.
+
 ## Credits
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
